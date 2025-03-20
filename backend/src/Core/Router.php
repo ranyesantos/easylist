@@ -12,9 +12,10 @@ class Router
     public static function route($uri, $method): void 
     {
         $container = ContainerSetters::init();
-        $routes = ApiRoutes::getRoutes();
-        
-        $controllerPath = 'App\\Controllers\\API\\V1\\';
+        // $routes = ApiRoutes::getRoutes();
+        $routes = require __DIR__ . '/../../Routes/Api.php';
+        // var_dump($routes);
+        $controllerPath = 'App\\Http\\Controllers\\API\\V1\\';
         $matched = false;
         foreach ($routes[$method] as $route => $controllerAction) {
             if ($uri === $route) {
@@ -69,13 +70,15 @@ class Router
                     $controllerInstance = $container->get($controller);
                     if (method_exists($controllerInstance, $action)) {
                         $reflectionMethod = new ReflectionMethod($controllerInstance, $action);
+                        //$params recebe os parametros esperados pelo método do controller
                         $params = $reflectionMethod->getParameters();
                         
                         $args = [];
 
                         foreach ($params as $param) {
-                            
-                            if ($param->getType() && $param->getType()->getName() === 'App\\Http\\Request') {
+                            //verifica se o parametro no método do controller é do tipo Request
+                            if ($param->getType() && $param->getType()->getName() === 'App\\Http\\Helpers\\Request') {
+                                //$args guarda a instância da classe Request que será injetada no controller
                                 $args[] = $container->get('Request');
                             } elseif ($param->getName() === 'id') {
                                 $args[] = $id;

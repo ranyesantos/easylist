@@ -2,7 +2,8 @@
 
 namespace App\Tests;
 
-use App\Requests\ProductRequest;
+
+use App\Http\Requests\ProductRequest;
 use PHPUnit\Framework\TestCase;
 
 class ProductRequestTest extends TestCase

@@ -2,7 +2,7 @@
 
 namespace App\Utils;
 
-use App\Http\Request;
+use App\Http\Helpers\Request;
 use App\Utils\HttpStatusCode;
 
 class ValidationHandler
