@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controllers\API\V1;
+namespace App\Http\Controllers\API\V1;
 
-use App\Http\Request;
+use App\Http\Helpers\Request;
 use App\Services\Products\ProductService;
 use App\Utils\HttpStatusCode;
 
@@ -75,7 +75,6 @@ class ProductController
 
     public function update(Request $request, $id) 
     {
-        
         try {
             $response = [
                 'status' => 'success',

@@ -19,12 +19,13 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose --version
 
+      - name: Set up Docker Compose
+        run: |
+          docker-compose -f docker-compose.yml up -d
+
       - name: install composer dependencies
         run: |
           docker-compose exec -T php composer install
-    
-      - name: start docker containers
-        run: docker-compose up -d --build
 
       - name: run PHPUnit tests
         run: docker-compose exec -T php vendor/bin/phpunit --testdox
