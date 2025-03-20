@@ -13,6 +13,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
     
+      - name: install docker compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/v2.6.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
+
       - name: Set up Docker Compose
         run: |
           docker-compose -f docker-compose.yml up -d
@@ -20,9 +26,6 @@ jobs:
       - name: install composer dependencies
         run: |
           docker-compose exec -T php composer install
-    
-      - name: start docker containers
-        run: docker-compose up -d --build
 
       - name: run PHPUnit tests
         run: docker-compose exec -T php vendor/bin/phpunit --testdox
