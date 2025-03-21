@@ -62,8 +62,14 @@ class Router
                     if (isset($matches[1])) {
                         $id = $matches[1];
                     }
+                    // var_dump($controllerAction['controller']);
 
-                    list($controller, $action) = explode('@', $controllerAction);
+                    if (is_array($controllerAction)){
+                        list($controller, $action) = explode('@', $controllerAction['controller']);
+                    } else {
+                        list($controller, $action) = explode('@', $controllerAction);
+                    }
+
                     if (!class_exists($controllerPath . $controller)){
                         return;
                     }
