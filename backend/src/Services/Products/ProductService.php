@@ -9,7 +9,6 @@ class ProductService
 {
 
     private $productRepository;
-    private $productValidator;
 
     public function __construct(
         ProductRepositoryInterface $productRepository
@@ -29,6 +28,10 @@ class ProductService
     {
         $product = $this->productRepository->getById($id);
         
+        if (!$product) {
+            throw new NotFoundException("Produto não encontrado");
+        }
+
         return $product;
     }
 
@@ -50,6 +53,10 @@ class ProductService
 
     public function delete(int $id): void 
     {
+        if (!$this->productRepository->getById($id)) {
+            throw new NotFoundException("Produto não encontrado");
+        }
+        
         $this->productRepository->delete($id);
     }
     

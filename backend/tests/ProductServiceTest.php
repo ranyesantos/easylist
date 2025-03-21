@@ -2,6 +2,7 @@
 
 namespace App\Tests;
 
+use App\Exceptions\NotFoundException;
 use App\Interfaces\ProductRepositoryInterface;
 use App\Services\Products\ProductService;
 use PHPUnit\Framework\TestCase;
@@ -56,7 +57,19 @@ class ProductServiceTest extends TestCase
 
         $this->assertEquals($product, $result);
     }
- 
+
+    public function testGetProductByIdMethodThrowsExceptionWhenNotProductFound()
+    {
+        $this->expectException(NotFoundException::class);
+        $this->expectExceptionMessage('Produto não encontrado'); 
+
+        $productRepositoryMock = $this->createMock(ProductRepositoryInterface::class);
+        $productRepositoryMock->method('getById')->willReturn(null);
+
+        $productService = new ProductService($productRepositoryMock);
+        $productService->getById(1);
+    }
+
     //create method tests
     public function testCreateWithValidData()
     {
@@ -90,16 +103,37 @@ class ProductServiceTest extends TestCase
         $this->assertEquals($expectedResult, $result);
     }
 
+    public function testUpdateMethodThrowsExceptionWhenProductNotFound()
+    {
+        $this->expectException(NotFoundException::class);
+        $this->expectExceptionMessage("Produto não encontrado"); 
+
+        $productRepositoryMock = $this->createMock(ProductRepositoryInterface::class);
+        $productService = new ProductService($productRepositoryMock);
+        $productService->update(1, ['nome' => 'produto inexistente']);
+    }
+
     //delete method tests
     public function testDeleteCallsRepositoryWithCorrectId()
     {
         $id = 1;
 
         $productRepositoryMock = $this->createMock(ProductRepositoryInterface::class);
+        $productRepositoryMock->method('getById')->willReturn(true);
         $productRepositoryMock->expects($this->once())->method('delete')->with($id);
 
         $productService = new ProductService($productRepositoryMock);
         $productService->delete($id);
+    }
+
+    public function testDeleteMethodThrowsExceptionWhenProductNotFound()
+    {
+        $this->expectException(NotFoundException::class);
+        $this->expectExceptionMessage('Produto não encontrado'); 
+
+        $productRepositoryMock = $this->createMock(ProductRepositoryInterface::class);
+        $productService = new ProductService($productRepositoryMock);
+        $productService->update(1, ['nome' => 'produto inexistente']);
     }
 
 }
