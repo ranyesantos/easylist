@@ -80,6 +80,7 @@ class ProductServiceTest extends TestCase
         $expectedResult = ['id' => 1, 'name' => 'Laptop', 'price' => 1500, 'stock' => 10];
 
         $productRepositoryMock = $this->createMock(ProductRepositoryInterface::class);
+        $productRepositoryMock->method('getById')->willReturn(true);
         $productRepositoryMock->method('update')->willReturn($expectedResult);
         $productRepositoryMock->expects($this->once())->method('update');
 
