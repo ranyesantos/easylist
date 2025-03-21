@@ -14,30 +14,9 @@ class ContainerSetters
             return new \App\Repositories\ProductRepository;
         });
 
-        $container->set(\App\Validators\Products\NameValidator::class, function (){
-            return new \App\Validators\Products\NameValidator;
-        });
-
-        $container->set(\App\Validators\Products\PriceValidator::class, function (){
-            return new \App\Validators\Products\PriceValidator;
-        });
-
-        $container->set(\App\Validators\Products\StockValidator::class, function (){
-            return new \App\Validators\Products\StockValidator;
-        });
-
-        $container->set(\App\Interfaces\ProductValidationInterface::class, function() use ($container){
-            return new \App\Validators\ProductValidator([
-                $container->get(\App\Validators\Products\NameValidator::class),
-                $container->get(\App\Validators\Products\PriceValidator::class),
-                $container->get(\App\Validators\Products\StockValidator::class),
-            ]);
-        });
-
         $container->set('ProductService', function() use ($container) {
             return new \App\Services\Products\ProductService(
-                $container->get('ProductRepositoryInterface'),
-                $container->get(\App\Interfaces\ProductValidationInterface::class)
+                $container->get('ProductRepositoryInterface')
             );
         });
 

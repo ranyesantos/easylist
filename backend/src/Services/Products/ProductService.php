@@ -2,22 +2,19 @@
 
 namespace App\Services\Products;
 
+use App\Exceptions\NotFoundException;
 use App\Interfaces\ProductRepositoryInterface;
-use App\Interfaces\ProductValidationInterface;
 
 class ProductService 
 {
 
     private $productRepository;
-    private $productValidator;
 
     public function __construct(
-        ProductRepositoryInterface $productRepository,
-        ProductValidationInterface $productValidator
+        ProductRepositoryInterface $productRepository
     ) 
     {
         $this->productRepository = $productRepository;
-        $this->productValidator = $productValidator;
     }
 
     public function getAll(): array 
@@ -31,6 +28,10 @@ class ProductService
     {
         $product = $this->productRepository->getById($id);
         
+        if (!$product) {
+            throw new NotFoundException("Produto não encontrado");
+        }
+
         return $product;
     }
 
@@ -43,14 +44,19 @@ class ProductService
     
     public function update(int $id, array $data)
     {
-        $this->productValidator->validate($data);
-        $product = $this->productRepository->update($id, $data);
+        if (!$this->productRepository->getById($id)) {
+            throw new NotFoundException("Produto não encontrado");
+        }
 
-        return $product;
+        return $this->productRepository->update($id, $data);
     }
 
     public function delete(int $id): void 
     {
+        if (!$this->productRepository->getById($id)) {
+            throw new NotFoundException("Produto não encontrado");
+        }
+        
         $this->productRepository->delete($id);
     }
     
