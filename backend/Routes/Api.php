@@ -14,8 +14,9 @@
         ],
         'PUT' => [
             'products/(\d+)' => [
-                'ProductController@update'
-                
+                'controller' => 'ProductController@update',
+                'middleware' => ['ValidationMiddleware'],
+                'validation' => 'App\\Http\\Requests\\ProductRequest',
             ],
         ],
         'DELETE' => [
