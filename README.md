@@ -41,7 +41,7 @@
 
 ---
 
-## Tabelas e Relacionamentos 🗄️
+# Tabelas e Relacionamentos 🗄️
 * Obs: Atualmente, apenas a tabela de produtos está inserida no projeto. As tabelas abaixo ainda serão implementadas
 ### 1. categories
 Tabela que armazena as categorias dos produtos.
