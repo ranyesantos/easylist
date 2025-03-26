@@ -4,7 +4,7 @@
     - [Cenário Atual e Problema 🔴](#cenário-atual-e-problema-)
     - [Proposta da aplicação 🟢](#proposta-da-aplicação-)
 - [Principais Objetivos técnicos 🛠️](#principais-objetivos-técnicos-️)
-  - [Tabelas e Relacionamentos �️](#tabelas-e-relacionamentos-️)
+- [Tabelas e Relacionamentos 🗄️](#tabelas-e-relacionamentos-️)
     - [1. categories](#1-categories)
     - [2. product\_categories](#2-product_categories)
     - [3. products](#3-products)
@@ -42,7 +42,9 @@
 ---
 
 # Tabelas e Relacionamentos 🗄️
+
 * Obs: Atualmente, apenas a tabela de produtos está inserida no projeto. As tabelas abaixo ainda serão implementadas
+  
 ### 1. categories
 Tabela que armazena as categorias dos produtos.
 
