@@ -5,7 +5,7 @@ services:
       - '8080:80'
     volumes: 
       - ./backend:/var/www/html
-      - ./default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     networks:
       - backend-network
 
