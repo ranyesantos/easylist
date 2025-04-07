@@ -3,7 +3,7 @@
 namespace App\Tests;
 
 use App\Exceptions\NotFoundException;
-use App\Interfaces\ProductRepositoryInterface;
+use App\Repositories\Contracts\ProductRepositoryInterface;
 use App\Services\Products\ProductService;
 use PHPUnit\Framework\TestCase;
 

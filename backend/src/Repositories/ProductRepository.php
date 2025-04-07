@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 use App\Db\Connection;
-use App\Interfaces\ProductRepositoryInterface;
+use App\Repositories\Contracts\ProductRepositoryInterface;
 
 class ProductRepository implements ProductRepositoryInterface 
 {
@@ -16,7 +16,7 @@ class ProductRepository implements ProductRepositoryInterface
 
     public function getAll(): array
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM products");
+        $stmt = $this->pdo->prepare("SELECT * FROM product");
         $stmt->execute();
         
         return $stmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
@@ -25,7 +25,7 @@ class ProductRepository implements ProductRepositoryInterface
 
     public function getById(int $id)
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM products WHERE id = :id");
+        $stmt = $this->pdo->prepare("SELECT * FROM product WHERE id = :id");
         $stmt->execute(['id' => $id]);
         $product = $stmt->fetch(\PDO::FETCH_ASSOC) ?: null;
 
@@ -34,7 +34,7 @@ class ProductRepository implements ProductRepositoryInterface
 
     public function create(array $data)
     {
-        $stmt = $this->pdo->prepare("INSERT INTO products (name, price, stock) VALUES (:name, :price, :stock)");
+        $stmt = $this->pdo->prepare("INSERT INTO product (name, price, stock) VALUES (:name, :price, :stock)");
         $stmt->execute([
             'name' => $data['name'],
             'price' => $data['price'],
@@ -46,7 +46,7 @@ class ProductRepository implements ProductRepositoryInterface
 
     public function update(int $id, array $data)
     {
-        $stmt = $this->pdo->prepare("UPDATE products SET name = :name, price = :price, stock = :stock WHERE id = :id");
+        $stmt = $this->pdo->prepare("UPDATE product SET name = :name, price = :price, stock = :stock WHERE id = :id");
         $stmt->execute([
             "id" => $id,
             "name" => $data["name"],
@@ -59,7 +59,7 @@ class ProductRepository implements ProductRepositoryInterface
 
     public function delete(int $id)
     {
-        $stmt = $this->pdo->prepare("DELETE FROM products WHERE id = :id");
+        $stmt = $this->pdo->prepare("DELETE FROM product WHERE id = :id");
         $stmt->execute([
             "id"=> $id
         ]);
