@@ -3,7 +3,7 @@
 namespace App\Services\Products;
 
 use App\Exceptions\NotFoundException;
-use App\Interfaces\ProductRepositoryInterface;
+use \App\Repositories\Contracts\ProductRepositoryInterface;
 
 class ProductService 
 {
