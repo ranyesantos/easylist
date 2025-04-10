@@ -13,7 +13,7 @@ class Router
     {
         $container = ContainerSetters::init();
         // $routes = ApiRoutes::getRoutes();
-        $routes = require __DIR__ . '/../../Routes/Api.php';
+        $routes = require __DIR__ . '/../../Routes/api.php';
         // var_dump($routes);
         $controllerPath = 'App\\Http\\Controllers\\API\\V1\\';
         $matched = false;
