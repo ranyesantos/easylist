@@ -4,14 +4,21 @@
     - [Cenário Atual e Problema 🔴](#cenário-atual-e-problema-)
     - [Proposta da aplicação 🟢](#proposta-da-aplicação-)
 - [Principais Objetivos técnicos 🛠️](#principais-objetivos-técnicos-️)
-- [Tabelas e Relacionamentos 🗄️](#tabelas-e-relacionamentos-️)
+- [Tabelas do banco de dados 🗄️](#tabelas-do-banco-de-dados-️)
     - [1. categories](#1-categories)
-    - [2. product\_categories](#2-product_categories)
+    - [2. product\_category](#2-product_category)
     - [3. products](#3-products)
-    - [4. product\_picture](#4-product_picture)
-    - [5. sizes](#5-sizes)
-    - [6. products\_sizes](#6-products_sizes)
-    - [7. customer\_order](#7-customer_order)
+    - [4. color](#4-color)
+    - [5. picture\_color](#5-picture_color)
+    - [6. sizes](#6-sizes)
+    - [7. product\_size](#7-product_size)
+    - [8. category\_size](#8-category_size)
+    - [9. size\_category\_size](#9-size_category_size)
+    - [10. customers](#10-customers)
+    - [11. customer\_address](#11-customer_address)
+    - [12. customer\_order](#12-customer_order)
+    - [13. product\_size\_order](#13-product_size_order)
+- [Diagrama ER](#diagrama-er)
 ---
 # Sobre o projeto  ℹ
 ### Cenário Atual e Problema 🔴
@@ -41,28 +48,26 @@
 
 ---
 
-# Tabelas e Relacionamentos 🗄️
+# Tabelas do banco de dados 🗄️
 
-* Obs: Atualmente, apenas a tabela de produtos está inserida no projeto. As tabelas abaixo ainda serão implementadas
-  
 ### 1. categories
 Tabela que armazena as categorias dos produtos.
 
-| Campo  | Tipo   | Descrição          |
-|--------|--------|-----------------|
+| Campo  | Tipo   | Descrição |
+|--------|--------|-----------|
 | id     | INT (PK) | Identificador único da categoria |
-| name   | VARCHAR | Nome da categoria |
+| name   | VARCHAR(100) | Nome da categoria |
 
 **Relacionamentos:**
-- Relaciona-se com `products` através da tabela intermediária `product_categories`.
+- Relaciona-se com `products` através da tabela intermediária `product_category`.
 
 ---
 
-### 2. product_categories
+### 2. product_category
 Tabela intermediária que define o relacionamento muitos-para-muitos entre produtos e categorias.
 
-| Campo       | Tipo   | Descrição          |
-|------------|--------|-----------------|
+| Campo       | Tipo   | Descrição |
+|------------|--------|-----------|
 | id         | INT (PK) | Identificador único |
 | category_id| INT (FK) | Referência para `categories` |
 | product_id | INT (FK) | Referência para `products` |
@@ -72,64 +77,135 @@ Tabela intermediária que define o relacionamento muitos-para-muitos entre produ
 ### 3. products
 Tabela que armazena os produtos do sistema.
 
-| Campo             | Tipo   | Descrição |
-|------------------|--------|-----------|
-| id              | INT (PK) | Identificador único do produto |
-| name            | VARCHAR | Nome do produto |
-| price           | INT | Preço do produto |
-| stock           | ENUM (disponível e indisponível) | Disponibilidade do produto |
+| Campo       | Tipo   | Descrição |
+|-------------|--------|-----------|
+| id          | INT (PK) | Identificador único do produto |
+| name        | VARCHAR(100) | Nome do produto |
+| description | TEXT | Descrição do produto |
 
 **Relacionamentos:**
-- Possui um relacionamento opcional com `product_picture`.
-- Relaciona-se com `categories` através da tabela `product_categories`.
-- Relaciona-se com `sizes` através da tabela intermediária `products_sizes`.
+- Relaciona-se com `categories` via `product_category`
+- Relaciona-se com `color`, `product_size`
 
 ---
 
-### 4. product_picture
-Tabela que armazena imagens dos produtos.
+### 4. color
+Tabela que define cores associadas a produtos.
 
-| Campo         | Tipo   | Descrição |
-|--------------|--------|-----------|
-| id           | INT (PK) | Identificador único da imagem |
-| picture_url  | VARCHAR | URL da imagem |
-| product_id   | INT (FK) | Referência para `products` |
-
----
-
-### 5. sizes
-Tabela que armazena os tamanhos disponíveis para os produtos.
-
-| Campo             | Tipo   | Descrição |
-|------------------|--------|-----------|
-| id              | INT (PK) | Identificador único do tamanho |
-| size_description | VARCHAR | Descrição do tamanho |
+| Campo        | Tipo        | Descrição |
+|--------------|-------------|-----------|
+| id           | INT (PK)    | Identificador da cor |
+| name         | VARCHAR(100)| Nome da cor |
+| product_id   | INT (FK)    | Produto ao qual a cor pertence |
 
 ---
 
-### 6. products_sizes
-Tabela intermediária que define o relacionamento muitos-para-muitos entre produtos e tamanhos.
+### 5. picture_color
+Tabela que armazena imagens associadas a uma cor.
 
-| Campo     | Tipo   | Descrição |
-|----------|--------|-----------|
-| id       | INT (PK) | Identificador único |
-| product_id | INT (FK) | Referência para `products` |
-| size_id  | INT (FK) | Referência para `sizes` |
+| Campo        | Tipo         | Descrição |
+|--------------|--------------|-----------|
+| id           | INT (PK)     | Identificador da imagem |
+| picture_url  | VARCHAR(2083)| URL da imagem |
+| color_id     | INT (FK)     | Cor à qual a imagem pertence |
 
 ---
 
-### 7. customer_order
-Tabela que armazena os pedidos dos clientes.
+### 6. sizes
+Tabela de tamanhos disponíveis para produtos.
 
-| Campo             | Tipo   | Descrição |
-|------------------|--------|-----------|
-| id              | INT (PK) | Identificador único do pedido |
-| customer_name   | VARCHAR | Nome do cliente |
-| delivery_method | ENUM (retirada ou delivery) | Método de entrega |
-| payment_method  | VARCHAR | Forma de pagamento |
-| shipping_address| VARCHAR | Endereço de entrega |
-| product_sizes_id | INT (FK) | Referência para `products_sizes` |
+| Campo             | Tipo         | Descrição |
+|------------------|--------------|-----------|
+| id               | INT (PK)     | Identificador do tamanho |
+| size_description | VARCHAR(100) | Descrição ou nome do tamanho |
 
+---
 
+### 7. product_size
+Relação entre produtos e tamanhos, com estoque, preço e quantidade.
 
+| Campo        | Tipo           | Descrição |
+|--------------|----------------|-----------|
+| id           | INT (PK)       | Identificador |
+| quantity     | INT UNSIGNED   | Quantidade de produtos no pedido |
+| price        | INT UNSIGNED   | Preço |
+| stock        | ENUM('yes','no') | Indica se está disponível em estoque |
+| product_id   | INT (FK)       | Produto relacionado |
+| size_id      | INT (FK)       | Tamanho relacionado |
+
+---
+
+### 8. category_size
+Categorias genéricas de tamanhos (ex: tamanhos de tênis, tamanhos de roupas).
+
+| Campo  | Tipo        | Descrição |
+|--------|-------------|-----------|
+| id     | INT (PK)    | Identificador |
+| name   | VARCHAR(100)| Nome da categoria de tamanho |
+
+---
+
+### 9. size_category_size
+Relação entre tamanhos e suas categorias de tamanho.
+
+| Campo              | Tipo     | Descrição |
+|--------------------|----------|-----------|
+| id                 | INT (PK) | Identificador |
+| size_id            | INT (FK) | Tamanho relacionado |
+| category_size_id   | INT (FK) | Categoria de tamanho relacionada |
+
+---
+
+### 10. customers
+Tabela com os dados dos clientes.
+
+| Campo           | Tipo         | Descrição |
+|-----------------|--------------|-----------|
+| id              | INT (PK)     | Identificador do cliente |
+| phone_number    | VARCHAR(20)  | Telefone do cliente|
+| customer_name   | VARCHAR(100) | Nome do cliente |
+
+---
+
+### 11. customer_address
+Endereços associados aos clientes.
+
+| Campo         | Tipo         | Descrição |
+|---------------|--------------|-----------|
+| id            | INT (PK)     | Identificador do endereço |
+| postal_code   | VARCHAR(9)   | CEP |
+| street        | VARCHAR(150) | Rua |
+| complement    | VARCHAR(100) | Complemento |
+| neighborhood  | VARCHAR(100) | Bairro |
+| city          | VARCHAR(100) | Cidade |
+| state         | CHAR(2)      | Estado |
+| customer_id   | INT (FK)     | Cliente relacionado |
+
+---
+
+### 12. customer_order
+Pedidos realizados pelos clientes.
+
+| Campo            | Tipo                            | Descrição |
+|------------------|----------------------------------|-----------|
+| id               | INT (PK)                         | Identificador do pedido |
+| delivery_method  | ENUM('local pickup', 'delivery') | Forma de entrega |
+| remarks          | TEXT                             | Observações adicionais |
+| total_price      | INT                              | Valor total |
+| customer_id      | INT (FK)                         | Cliente que fez o pedido |
+
+---
+
+### 13. product_size_order
+Tabela que vincula pedidos aos tamanhos de produtos selecionados.
+
+| Campo              | Tipo     | Descrição |
+|--------------------|----------|-----------|
+| id                 | INT (PK) | Identificador |
+| price              | INT      | Preço no momento do pedido |
+| order_id           | INT (FK) | Pedido associado |
+| product_size_id    | INT (FK) | Combinação de produto + tamanho selecionado |
+
+# Diagrama ER
+![ER Diagram](./db/diagram.svg)
 
