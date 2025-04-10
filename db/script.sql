@@ -47,7 +47,7 @@ CREATE TABLE product_size (
     stock ENUM('yes', 'no') NOT NULL DEFAULT 'yes',
     product_id INT,
     size_id INT,
-    FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
+    FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE,
     FOREIGN KEY (size_id) REFERENCES `size`(id) ON DELETE CASCADE
 );
 
@@ -99,5 +99,3 @@ CREATE TABLE product_size_order(
     FOREIGN KEY (order_id) REFERENCES customer_order(id) ON DELETE CASCADE,
     FOREIGN KEY (product_size_id) REFERENCES product_size(id) ON DELETE CASCADE
 );
-
-SHOW TABLES;
