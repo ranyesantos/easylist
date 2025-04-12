@@ -1,9 +1,9 @@
 <?php 
 
-namespace App\Services\Products;
+namespace App\Services;
 
 use App\Exceptions\NotFoundException;
-use App\Repositories\Contracts\CategoryRepositoryInterface;
+use App\Repositories\Category\CategoryRepositoryInterface;
 
 class CategoryService 
 {

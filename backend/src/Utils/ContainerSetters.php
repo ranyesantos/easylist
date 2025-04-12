@@ -12,22 +12,22 @@ class ContainerSetters
         
         //<-----interfaces/repositories----->
         $container->set('ProductRepositoryInterface', function () {
-            return new \App\Repositories\ProductRepository;
+            return new \App\Repositories\Product\ProductRepository;
         });
 
         $container->set('CategoryRepositoryInterface', function () {
-            return new \App\Repositories\CategoryRepository();
+            return new \App\Repositories\Category\CategoryRepository();
         });
 
         //<-----services----->
         $container->set('ProductService', function() use ($container) {
-            return new \App\Services\Products\ProductService(
+            return new \App\Services\ProductService(
                 $container->get('ProductRepositoryInterface')
             );
         });
 
         $container->set('CategoryService', function() use ($container) {
-            return new \App\Services\Products\CategoryService(
+            return new \App\Services\CategoryService(
                 $container->get('CategoryRepositoryInterface')
             );
         });

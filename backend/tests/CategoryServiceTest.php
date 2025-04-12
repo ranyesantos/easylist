@@ -3,8 +3,8 @@
 namespace App\Tests;
 
 use App\Exceptions\NotFoundException;
-use App\Repositories\Contracts\CategoryRepositoryInterface;
-use App\Services\Products\CategoryService;
+use App\Repositories\Category\CategoryRepositoryInterface;
+use App\Services\CategoryService;
 use PHPUnit\Framework\TestCase;
 
 class CategoryServiceTest extends TestCase

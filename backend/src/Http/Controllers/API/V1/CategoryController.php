@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API\V1;
 
 use App\Exceptions\NotFoundException;
 use App\Http\Helpers\Request;
-use App\Services\Products\CategoryService;
+use App\Services\CategoryService;
 use App\Utils\HttpStatusCode;
 
 class CategoryController 
