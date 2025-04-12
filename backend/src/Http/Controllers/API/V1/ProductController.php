@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API\V1;
 
 use App\Http\Helpers\Request;
-use App\Services\Products\ProductService;
+use App\Services\ProductService;
 use App\Utils\HttpStatusCode;
 
 class ProductController 

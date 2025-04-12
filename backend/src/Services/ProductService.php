@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Services\Products;
+namespace App\Services;
 
 use App\Exceptions\NotFoundException;
-use \App\Repositories\Contracts\ProductRepositoryInterface;
+use \App\Repositories\Product\ProductRepositoryInterface;
 
 class ProductService 
 {
