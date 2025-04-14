@@ -14,7 +14,7 @@
     - [7. product\_size](#7-product_size)
     - [8. category\_size](#8-category_size)
     - [9. size\_category\_size](#9-size_category_size)
-    - [10. customers](#10-customers)
+    - [10. customer](#10-customer)
     - [11. customer\_address](#11-customer_address)
     - [12. customer\_order](#12-customer_order)
     - [13. product\_size\_order](#13-product_size_order)
@@ -156,7 +156,7 @@ Relação entre tamanhos e suas categorias de tamanho.
 
 ---
 
-### 10. customers
+### 10. customer
 Tabela com os dados dos clientes.
 
 | Campo           | Tipo         | Descrição |
