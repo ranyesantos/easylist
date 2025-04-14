@@ -6,6 +6,8 @@
             'products/(\d+)' => 'ProductController@show',
             'categories' => 'CategoryController@index',
             'categories/(\d+)' => 'CategoryController@show',
+            'customers' => 'CustomerController@index',
+            'customers/(\d+)' => 'CustomerController@show',
         ],
         'POST' => [
             'products' => [
@@ -15,6 +17,9 @@
             ],
             'categories' => [
                 'controller' => 'CategoryController@store'
+            ],
+            'customers' => [
+                'controller' => 'CustomerController@store'
             ]
         ],
         'PUT' => [
@@ -25,11 +30,15 @@
             ],
             'categories/(\d+)' => [
                 'controller' => 'CategoryController@update'
+            ],
+            'customers/(\d+)' => [
+                'controller' => 'CustomerController@update'
             ]
         ],
         'DELETE' => [
             'products/(\d+)' => 'ProductController@delete',
             'categories/(\d+)' => 'CategoryController@delete',
+            'customers/(\d+)' => 'CustomerController@delete',
         ]
     ];
 

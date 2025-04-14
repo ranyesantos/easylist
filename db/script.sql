@@ -66,8 +66,8 @@ CREATE TABLE size_category_size (
 
 CREATE TABLE customer (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    phone_number VARCHAR(20) NOT NULL,
-    customer_name VARCHAR(100) NOT NULL
+    name VARCHAR(100) NOT NULL,
+    phone_number VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE customer_address (

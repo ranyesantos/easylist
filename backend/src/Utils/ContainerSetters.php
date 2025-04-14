@@ -19,6 +19,10 @@ class ContainerSetters
             return new \App\Repositories\Category\CategoryRepository();
         });
 
+        $container->set('CustomerRepositoryInterface', function () {
+            return new \App\Repositories\Customer\CustomerRepository();
+        });
+
         //<-----services----->
         $container->set('ProductService', function() use ($container) {
             return new \App\Services\ProductService(
@@ -32,6 +36,12 @@ class ContainerSetters
             );
         });
 
+        $container->set('CustomerService', function() use ($container) {
+            return new \App\Services\CustomerService(
+                $container->get('CustomerRepositoryInterface')
+            );
+        });
+
         //<-----controllers----->
         $container->set('ProductController', function() use ($container) {
             return new \App\Http\Controllers\API\V1\ProductController($container->get('ProductService'));
@@ -39,6 +49,10 @@ class ContainerSetters
 
         $container->set('CategoryController', function() use ($container) {
             return new \App\Http\Controllers\API\V1\CategoryController($container->get('CategoryService'));
+        });
+
+        $container->set('CustomerController', function() use ($container) {
+            return new \App\Http\Controllers\API\V1\CustomerController($container->get('CustomerService'));
         });
         
         //<-----etc----->
