@@ -30,7 +30,7 @@ class CategoryServiceTest extends TestCase
         $this->assertEquals($categories, $result);
     }
 
-    public function testGetAllCategoriessWhenHaveNoCategoriesRegistered()
+    public function testGetAllCategoriesWhenHaveNoCategoriesRegistered()
     {
         $categories = [];
 
@@ -46,7 +46,7 @@ class CategoryServiceTest extends TestCase
     }
 
     //getById method tests
-    public function testGetCategoryByIdReturnsProductCorrectly()
+    public function testGetCategoryByIdReturnsCategoryCorrectly()
     {
         $category = ['id' => 1, 'name' => 'Category 1'];
 
@@ -61,10 +61,10 @@ class CategoryServiceTest extends TestCase
         $this->assertEquals($category['id'], $result['id']);
     }
 
-    public function testGetProductByIdMethodThrowsExceptionWhenNotProductFound()
+    public function testGetCategoryByIdMethodThrowsExceptionWhenNotCategoryFound()
     {
         $this->expectException(NotFoundException::class);
-        $this->expectExceptionMessage("Categoria não encontrada");
+        $this->expectExceptionMessageMatches('/^Categoria não encontrada/');
 
         $categoryRepositoryMock = $this->createMock(CategoryRepositoryInterface::class);
         $categoryRepositoryMock
@@ -115,7 +115,7 @@ class CategoryServiceTest extends TestCase
     public function testUpdateMethodThrowsExceptionWhenCategoryNotFound()
     {
         $this->expectException(NotFoundException::class);
-        $this->expectExceptionMessage("Categoria não encontrada");
+        $this->expectExceptionMessageMatches('/^Categoria não encontrada/');
     
         $id = 1;
         $category = ['name' => 'Category 1'];
@@ -134,7 +134,7 @@ class CategoryServiceTest extends TestCase
     public function testDeleteMethodThrowsExceptionWhenCategoryNotFound()
     {
         $this->expectException(NotFoundException::class);
-        $this->expectExceptionMessage("Categoria não encontrada");
+        $this->expectExceptionMessageMatches('/^Categoria não encontrada/');
 
         $categoryRepositoryMock = $this->createMock(CategoryRepositoryInterface::class);
         $categoryRepositoryMock
