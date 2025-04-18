@@ -7,7 +7,7 @@ CREATE TABLE category (
     name VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE product (
+CREATE TABLE product ( 
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     description TEXT NOT NULL
@@ -23,15 +23,15 @@ CREATE TABLE product_category (
 
 CREATE TABLE color (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    product_id INT,
-    FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
+    name VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE picture_color (
+CREATE TABLE product_color (
     id INT AUTO_INCREMENT PRIMARY KEY,
     picture_url VARCHAR(2083) NOT NULL,
+    product_id INT,
     color_id INT,
+    FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE,
     FOREIGN KEY (color_id) REFERENCES color(id) ON DELETE CASCADE
 );
 
@@ -42,12 +42,11 @@ CREATE TABLE `size` (
 
 CREATE TABLE product_size (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    quantity INT UNSIGNED NOT NULL DEFAULT 1,
     price INT UNSIGNED NOT NULL,
     stock ENUM('yes', 'no') NOT NULL DEFAULT 'yes',
-    product_id INT,
+    product_color_id INT,
     size_id INT,
-    FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_color_id) REFERENCES product_color(id) ON DELETE CASCADE,
     FOREIGN KEY (size_id) REFERENCES `size`(id) ON DELETE CASCADE
 );
 
@@ -94,6 +93,7 @@ CREATE TABLE customer_order (
 CREATE TABLE product_size_order(
     id INT AUTO_INCREMENT PRIMARY KEY,
     price INT,
+    quantity INT UNSIGNED NOT NULL DEFAULT 1,
     order_id INT,
     product_size_id INT,
     FOREIGN KEY (order_id) REFERENCES customer_order(id) ON DELETE CASCADE,
