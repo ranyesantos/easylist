@@ -23,6 +23,10 @@ class ContainerSetters
             return new \App\Repositories\Customer\CustomerRepository();
         });
 
+        $container->set('ColorRepositoryInterface', function () {
+            return new \App\Repositories\Color\ColorRepository();
+        });
+
         //<-----services----->
         $container->set('ProductService', function() use ($container) {
             return new \App\Services\ProductService(
@@ -42,6 +46,12 @@ class ContainerSetters
             );
         });
 
+        $container->set('ColorService', function() use ($container) {
+            return new \App\Services\ColorService(
+                $container->get('ColorRepositoryInterface')
+            );
+        });
+
         //<-----controllers----->
         $container->set('ProductController', function() use ($container) {
             return new \App\Http\Controllers\API\V1\ProductController($container->get('ProductService'));
@@ -52,7 +62,11 @@ class ContainerSetters
         });
 
         $container->set('CustomerController', function() use ($container) {
-            return new \App\Http\Controllers\API\V1\CustomerController($container->get('CustomerService'));
+            return new \App\Http\Controllers\API\V1\CustomerController($container->get('ColorService'));
+        });
+
+        $container->set('ColorController', function() use ($container) {
+            return new \App\Http\Controllers\API\V1\ColorController($container->get('ColorService'));
         });
         
         //<-----etc----->
