@@ -28,6 +28,7 @@ CREATE TABLE color (
 
 CREATE TABLE product_color (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
     picture_url VARCHAR(2083) NOT NULL,
     product_id INT,
     color_id INT,
