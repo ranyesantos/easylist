@@ -19,9 +19,7 @@ return [
     ],
     'POST' => [
         'products' => [
-            'controller' => 'ProductController@store',
-            'middleware' => ['ValidationMiddleware'],
-            'validation' => 'App\\Http\\Requests\\ProductRequest',
+            'controller' => 'ProductController@store'
         ],
         'categories' => [
             'controller' => 'CategoryController@store'
@@ -38,9 +36,7 @@ return [
     ],
     'PUT' => [
         'products/(\d+)' => [
-            'controller' => 'ProductController@update',
-            'middleware' => ['ValidationMiddleware'],
-            'validation' => 'App\\Http\\Requests\\ProductRequest',
+            'controller' => 'ProductController@update'
         ],
         'categories/(\d+)' => [
             'controller' => 'CategoryController@update'
