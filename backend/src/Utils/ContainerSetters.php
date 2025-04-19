@@ -72,7 +72,7 @@ class ContainerSetters
         });
 
         $container->set('CustomerController', function() use ($container) {
-            return new \App\Http\Controllers\API\V1\CustomerController($container->get('ColorService'));
+            return new \App\Http\Controllers\API\V1\CustomerController($container->get('CustomerService'));
         });
 
         $container->set('ColorController', function() use ($container) {
