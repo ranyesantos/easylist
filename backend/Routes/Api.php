@@ -1,56 +1,67 @@
 <?php
 
-    return [
-        'GET' => [
-            'products' => 'ProductController@index',
-            'products/(\d+)' => 'ProductController@show',
+return [
+    'GET' => [
+        'products' => 'ProductController@index',
+        'products/(\d+)' => 'ProductController@show',
 
-            'categories' => 'CategoryController@index',
-            'categories/(\d+)' => 'CategoryController@show',
+        'categories' => 'CategoryController@index',
+        'categories/(\d+)' => 'CategoryController@show',
 
-            'customers' => 'CustomerController@index',
-            'customers/(\d+)' => 'CustomerController@show',
+        'customers' => 'CustomerController@index',
+        'customers/(\d+)' => 'CustomerController@show',
 
-            'colors' => 'ColorController@index',
-            'colors/(\d+)' => 'ColorController@show',
+        'colors' => 'ColorController@index',
+        'colors/(\d+)' => 'ColorController@show',
+
+        'sizes' => 'SizeController@index',
+        'sizes/(\d+)' => 'SizeController@show',
+    ],
+    'POST' => [
+        'products' => [
+            'controller' => 'ProductController@store',
+            'middleware' => ['ValidationMiddleware'],
+            'validation' => 'App\\Http\\Requests\\ProductRequest',
         ],
-        'POST' => [
-            'products' => [
-                'controller' => 'ProductController@store',
-                'middleware' => ['ValidationMiddleware'],
-                'validation' => 'App\\Http\\Requests\\ProductRequest',
-            ],
-            'categories' => [
-                'controller' => 'CategoryController@store'
-            ],
-            'customers' => [
-                'controller' => 'CustomerController@store'
-            ],
-            'colors' => [
-                'controller' => 'ColorController@store'
-            ]
+        'categories' => [
+            'controller' => 'CategoryController@store'
         ],
-        'PUT' => [
-            'products/(\d+)' => [
-                'controller' => 'ProductController@update',
-                'middleware' => ['ValidationMiddleware'],
-                'validation' => 'App\\Http\\Requests\\ProductRequest',
-            ],
-            'categories/(\d+)' => [
-                'controller' => 'CategoryController@update'
-            ],
-            'customers/(\d+)' => [
-                'controller' => 'CustomerController@update'
-            ],
-            'colors/(\d+)' => [
-                'controller' => 'ColorController@store'
-            ]
+        'customers' => [
+            'controller' => 'CustomerController@store'
         ],
-        'DELETE' => [
-            'products/(\d+)' => 'ProductController@delete',
-            'categories/(\d+)' => 'CategoryController@delete',
-            'customers/(\d+)' => 'CustomerController@delete',
-            'colors/(\d+)' => 'ColorController@delete',
-        ]
-    ];
+        'colors' => [
+            'controller' => 'ColorController@store'
+        ],
+        'sizes' => [
+            'controller' => 'SizeController@store'
+        ],
+    ],
+    'PUT' => [
+        'products/(\d+)' => [
+            'controller' => 'ProductController@update',
+            'middleware' => ['ValidationMiddleware'],
+            'validation' => 'App\\Http\\Requests\\ProductRequest',
+        ],
+        'categories/(\d+)' => [
+            'controller' => 'CategoryController@update'
+        ],
+        'customers/(\d+)' => [
+            'controller' => 'CustomerController@update'
+        ],
+        'colors/(\d+)' => [
+            'controller' => 'ColorController@store'
+        ],
+        'sizes/(\d+)' => [
+            'controller' => 'SizeController@update'
+        ],
+    ],
+    'DELETE' => [
+        'products/(\d+)' => 'ProductController@delete',
+        'categories/(\d+)' => 'CategoryController@delete',
+        'customers/(\d+)' => 'CustomerController@delete',
+        'colors/(\d+)' => 'ColorController@delete',
+        'sizes/(\d+)' => 'SizeController@delete',
+    ]
+];
+
 
