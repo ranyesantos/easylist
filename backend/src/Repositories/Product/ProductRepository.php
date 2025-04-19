@@ -34,11 +34,10 @@ class ProductRepository implements ProductRepositoryInterface
 
     public function create(array $data)
     {
-        $stmt = $this->pdo->prepare("INSERT INTO product (name, price, stock) VALUES (:name, :price, :stock)");
+        $stmt = $this->pdo->prepare("INSERT INTO product (name, description) VALUES (:name, :description)");
         $stmt->execute([
             'name' => $data['name'],
-            'price' => $data['price'],
-            'stock' => $data['stock']
+            'description' => $data['description']
         ]);
         
         return $this->getById($this->pdo->lastInsertId()) ?: null;
@@ -46,12 +45,11 @@ class ProductRepository implements ProductRepositoryInterface
 
     public function update(int $id, array $data)
     {
-        $stmt = $this->pdo->prepare("UPDATE product SET name = :name, price = :price, stock = :stock WHERE id = :id");
+        $stmt = $this->pdo->prepare("UPDATE product SET name = :name, description = :description WHERE id = :id");
         $stmt->execute([
-            "id" => $id,
-            "name" => $data["name"],
-            "price" => $data["price"],
-            "stock" => $data["stock"]
+            'id' => $id,
+            'name' => $data['name'],
+            'description' => $data['description']
         ]);
 
         return $this->getById($id);
@@ -61,7 +59,7 @@ class ProductRepository implements ProductRepositoryInterface
     {
         $stmt = $this->pdo->prepare("DELETE FROM product WHERE id = :id");
         $stmt->execute([
-            "id"=> $id
+            'id' => $id
         ]);
 
         return true;
