@@ -27,6 +27,10 @@ class ContainerSetters
             return new \App\Repositories\Color\ColorRepository();
         });
 
+        $container->set('SizeRepositoryInterface', function () {
+            return new \App\Repositories\Size\SizeRepository();
+        });
+
         //<-----services----->
         $container->set('ProductService', function() use ($container) {
             return new \App\Services\ProductService(
@@ -52,6 +56,12 @@ class ContainerSetters
             );
         });
 
+        $container->set('SizeService', function() use ($container) {
+            return new \App\Services\SizeService(
+                $container->get('SizeRepositoryInterface')
+            );
+        });
+
         //<-----controllers----->
         $container->set('ProductController', function() use ($container) {
             return new \App\Http\Controllers\API\V1\ProductController($container->get('ProductService'));
@@ -67,6 +77,10 @@ class ContainerSetters
 
         $container->set('ColorController', function() use ($container) {
             return new \App\Http\Controllers\API\V1\ColorController($container->get('ColorService'));
+        });
+
+        $container->set('SizeController', function() use ($container) {
+            return new \App\Http\Controllers\API\V1\SizeController($container->get('SizeService'));
         });
         
         //<-----etc----->
