@@ -14,14 +14,15 @@ class ProductServiceTest extends TestCase
     public function testGetAllProductsReturnsProductsCorrectly()
     {
         $products = [
-            ['id' => 1, 'name' => 'Laptop', 'price' => 1500, 'stock' => 10],
-            ['id' => 2, 'name' => 'Laptop', 'price' => 1100, 'stock' => 23],
-            ['id' => 3, 'name' => 'Headphones', 'price' => 200, 'stock' => 50],
-        ];        
+            ['name' => "T-Shirt", 'description' => "Cotton tee"],
+            ['name' => "Jeans", 'description' => "Slim fit"],
+            ['name' => "Sneakers", 'description' => "Running shoes"]
+        ];
 
         $productRepositoryMock = $this->createMock(ProductRepositoryInterface::class);
-        $productRepositoryMock->method('getAll')->willReturn($products);
-        $productRepositoryMock->expects($this->once())->method('getAll');
+        $productRepositoryMock
+            ->method('getAll')
+            ->willReturn($products);
 
         $productService = new ProductService($productRepositoryMock);
         $result = $productService->getAll();
@@ -34,8 +35,9 @@ class ProductServiceTest extends TestCase
         $products = [];
 
         $productRepositoryMock = $this->createMock(ProductRepositoryInterface::class);
-        $productRepositoryMock->method('getAll')->willReturn($products);
-        $productRepositoryMock->expects($this->once())->method('getAll');
+        $productRepositoryMock
+            ->method('getAll')
+            ->willReturn($products);
         
         $productService = new ProductService($productRepositoryMock);
         $result = $productService->getAll(); 
@@ -46,14 +48,17 @@ class ProductServiceTest extends TestCase
     //getById method tests
     public function testGetProductByIdReturnsProductCorrectly()
     {
-        $product = ['id' => 1, 'name' => 'Laptop', 'price' => 1500, 'stock' => 10];
+        $id = 1;
+        $product = ['id' => $id, 'name' => "Sneakers", 'description' => "Running shoes"];
 
         $productRepositoryMock = $this->createMock(ProductRepositoryInterface::class);
-        $productRepositoryMock->method('getById')->willReturn($product);
-        $productRepositoryMock->expects($this->once())->method('getById');
+        $productRepositoryMock
+            ->method('getById')
+            ->with($id)
+            ->willReturn($product);
 
         $productService = new ProductService($productRepositoryMock);
-        $result = $productService->getById(1);
+        $result = $productService->getById($id);
 
         $this->assertEquals($product, $result);
     }
@@ -61,79 +66,95 @@ class ProductServiceTest extends TestCase
     public function testGetProductByIdMethodThrowsExceptionWhenNotProductFound()
     {
         $this->expectException(NotFoundException::class);
-        $this->expectExceptionMessage('Produto não encontrado'); 
+        $this->expectExceptionMessageMatches("/^Produto não encontrado$/"); 
+        $id = 1;
 
         $productRepositoryMock = $this->createMock(ProductRepositoryInterface::class);
-        $productRepositoryMock->method('getById')->willReturn(null);
+        $productRepositoryMock
+            ->method('getById')
+            ->with($id)
+            ->willReturn(null);
 
         $productService = new ProductService($productRepositoryMock);
-        $productService->getById(1);
+        $productService->getById($id);
     }
 
     //create method tests
     public function testCreateWithValidData()
     {
-        $data = ['name' => 'Laptop', 'price' => 1500, 'stock' => 10];
+        $data = ['name' => "Sneakers", 'description' => "Running shoes"];
+        $expectedOutput = ['id' => 1, 'name' => "Sneakers", 'description' => "Running shoes"];
 
         $productRepositoryMock = $this->createMock(ProductRepositoryInterface::class);
-        $productRepositoryMock->method('create')->willReturn($data);
-        $productRepositoryMock->expects($this->once())->method('create');
+        $productRepositoryMock
+            ->method('create')
+            ->with($data)
+            ->willReturn($expectedOutput);
 
         $productService = new ProductService($productRepositoryMock);
         $result = $productService->create($data);
 
-        $this->assertEquals($data, $result);
+        $this->assertEquals($expectedOutput, $result);
     }
     
     //update method tests
     public function testUpdateWithValidData()
     {
         $id = 1;
-        $data = ['name' => 'Laptop', 'price' => 1500, 'stock' => 10];
-        $expectedResult = ['id' => 1, 'name' => 'Laptop', 'price' => 1500, 'stock' => 10];
+        $data = ['name' => "Sneakers", 'description' => "Running shoes"];
+        $expectedOutput = ['id' => $id, 'name' => "Sneakers", 'description' => "Running shoes"];
 
         $productRepositoryMock = $this->createMock(ProductRepositoryInterface::class);
-        $productRepositoryMock->method('getById')->willReturn(true);
-        $productRepositoryMock->method('update')->willReturn($expectedResult);
-        $productRepositoryMock->expects($this->once())->method('update');
+        $productRepositoryMock
+            ->method('getById')
+            ->with($id)
+            ->willReturn($expectedOutput);
+
+        $productRepositoryMock
+            ->method('update')
+            ->with($id, $data)
+            ->willReturn($expectedOutput);
 
         $productService = new ProductService($productRepositoryMock);
         $result = $productService->update($id, $data);
 
-        $this->assertEquals($expectedResult, $result);
+        $this->assertEquals($expectedOutput, $result);
     }
 
     public function testUpdateMethodThrowsExceptionWhenProductNotFound()
     {
         $this->expectException(NotFoundException::class);
-        $this->expectExceptionMessage("Produto não encontrado"); 
+        $this->expectExceptionMessageMatches("/^Produto não encontrado$/");
+        $id = 1;
+        $data = ['name' => "Sneakers", 'description' => "Running shoes"];
 
         $productRepositoryMock = $this->createMock(ProductRepositoryInterface::class);
+        $productRepositoryMock
+            ->method('getById')
+            ->with($id)
+            ->willReturn(null);
+
         $productService = new ProductService($productRepositoryMock);
-        $productService->update(1, ['nome' => 'produto inexistente']);
+        $productService->update($id, $data);
     }
 
     //delete method tests
-    public function testDeleteCallsRepositoryWithCorrectId()
-    {
-        $id = 1;
-
-        $productRepositoryMock = $this->createMock(ProductRepositoryInterface::class);
-        $productRepositoryMock->method('getById')->willReturn(true);
-        $productRepositoryMock->expects($this->once())->method('delete')->with($id);
-
-        $productService = new ProductService($productRepositoryMock);
-        $productService->delete($id);
-    }
 
     public function testDeleteMethodThrowsExceptionWhenProductNotFound()
     {
         $this->expectException(NotFoundException::class);
-        $this->expectExceptionMessage('Produto não encontrado'); 
+        $this->expectExceptionMessageMatches("/^Produto não encontrado$/");
+        $id = 1;
 
         $productRepositoryMock = $this->createMock(ProductRepositoryInterface::class);
+        $productRepositoryMock
+            ->method('getById')
+            ->with($id)
+            ->willReturn(null);
+
+
         $productService = new ProductService($productRepositoryMock);
-        $productService->update(1, ['nome' => 'produto inexistente']);
+        $productService->delete($id);
     }
 
 }

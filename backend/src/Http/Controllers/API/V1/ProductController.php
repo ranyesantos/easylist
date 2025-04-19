@@ -2,23 +2,21 @@
 
 namespace App\Http\Controllers\API\V1;
 
+use App\Exceptions\NotFoundException;
 use App\Http\Helpers\Request;
 use App\Services\ProductService;
 use App\Utils\HttpStatusCode;
 
-class ProductController 
+class ProductController
 {
+    private ProductService $productService;
 
-    private $productService;
-
-    public function __construct(
-        ProductService $productService
-    ) 
+    public function __construct(ProductService $productService)
     {
         $this->productService = $productService;
     }
 
-    public function index()
+    public function index(): void
     {
         try {
             $response = [
@@ -26,18 +24,15 @@ class ProductController
                 'data' => $this->productService->getAll(),
             ];
             Request::sendJsonResponse($response, HttpStatusCode::HTTP_OK);
-        
         } catch (\Exception $e) {
-            $response = [
+            Request::sendJsonResponse([
                 'status' => 'error',
-                'message' => $e->getMessage(),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_INTERNAL_SERVER_ERROR);
+                'message' => $e->getMessage()
+            ], HttpStatusCode::HTTP_INTERNAL_SERVER_ERROR);
         }
-        
     }
 
-    public function show($id) 
+    public function show(int $id): void
     {
         try {
             $response = [
@@ -45,17 +40,20 @@ class ProductController
                 'data' => $this->productService->getById($id),
             ];
             Request::sendJsonResponse($response, HttpStatusCode::HTTP_OK);
-        
-        } catch (\Exception $e) {
-            $response = [
+        } catch (NotFoundException $e) {
+            Request::sendJsonResponse([
                 'status' => 'error',
-                'message' => $e->getMessage(),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_INTERNAL_SERVER_ERROR);
+                'message' => $e->getMessage()
+            ], HttpStatusCode::HTTP_NOT_FOUND);
+        } catch (\Exception $e) {
+            Request::sendJsonResponse([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], HttpStatusCode::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    public function store(Request $request) 
+    public function store(Request $request): void
     {
         try {
             $response = [
@@ -63,17 +61,15 @@ class ProductController
                 'data' => $this->productService->create($request->getBody())
             ];
             Request::sendJsonResponse($response, HttpStatusCode::HTTP_OK);
-
         } catch (\Exception $e) {
-            $response = [
+            Request::sendJsonResponse([
                 'status' => 'error',
-                'message' => $e->getMessage(),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_INTERNAL_SERVER_ERROR);
+                'message' => $e->getMessage()
+            ], HttpStatusCode::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    public function update(Request $request, $id) 
+    public function update(Request $request, int $id): void
     {
         try {
             $response = [
@@ -81,31 +77,37 @@ class ProductController
                 'data' => $this->productService->update($id, $request->getBody())
             ];
             Request::sendJsonResponse($response, HttpStatusCode::HTTP_OK);
-
-        } catch (\Exception $e) {
-            $response = [
+        } catch (NotFoundException $e) {
+            Request::sendJsonResponse([
                 'status' => 'error',
-                'message' => $e->getMessage(),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_INTERNAL_SERVER_ERROR);
+                'message' => $e->getMessage()
+            ], HttpStatusCode::HTTP_NOT_FOUND);
+        } catch (\Exception $e) {
+            Request::sendJsonResponse([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], HttpStatusCode::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    public function delete($id) 
+    public function delete(int $id): void
     {
         try {
-            $response = [
+            $this->productService->delete($id);
+            Request::sendJsonResponse([
                 'status' => 'success',
-                'data' => $this->productService->delete($id),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_OK);
-        
-        } catch (\Exception $e) {
-            $response = [
+                'message' => 'Produto excluído com sucesso.'
+            ], HttpStatusCode::HTTP_OK);
+        } catch (NotFoundException $e) {
+            Request::sendJsonResponse([
                 'status' => 'error',
-                'message' => $e->getMessage(),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_INTERNAL_SERVER_ERROR);
+                'message' => $e->getMessage()
+            ], HttpStatusCode::HTTP_NOT_FOUND);
+        } catch (\Exception $e) {
+            Request::sendJsonResponse([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], HttpStatusCode::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }
