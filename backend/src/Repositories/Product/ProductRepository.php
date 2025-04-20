@@ -3,6 +3,7 @@
 namespace App\Repositories\Product;
 use App\Db\Connection;
 use App\Repositories\Product\ProductRepositoryInterface;
+use Exception;
 
 class ProductRepository implements ProductRepositoryInterface 
 {
@@ -32,15 +33,109 @@ class ProductRepository implements ProductRepositoryInterface
         return $product;
     }
 
-    public function create(array $data)
+    public function create(array $data): array
     {
-        $stmt = $this->pdo->prepare("INSERT INTO product (name, description) VALUES (:name, :description)");
-        $stmt->execute([
-            'name' => $data['name'],
-            'description' => $data['description']
-        ]);
-        
-        return $this->getById($this->pdo->lastInsertId()) ?: null;
+        try {
+            $this->pdo->beginTransaction();
+
+            $stmt = $this->pdo->prepare("
+                INSERT INTO product (name, description)
+                VALUES (:name, :description)
+            ");
+            $stmt->execute([
+                'name' => $data['name'],
+                'description' => $data['description'],
+            ]);
+
+            $productId = $this->pdo->lastInsertId();
+
+            $stmtProductColor = $this->pdo->prepare("
+                INSERT INTO product_color (name, picture_url, product_id, color_id)
+                VALUES (:name, :picture_url, :product_id, :color_id)
+            ");
+
+            $stmtProductSize = $this->pdo->prepare("
+                INSERT INTO product_size (price, product_color_id, size_id)
+                VALUES (:price, :product_color_id, :size_id)
+            ");
+
+            $productColors = [];
+
+            // insert product_color entries
+            foreach ($data['product_colors'] as $key => $productColor) {
+                // insert the product color
+                $stmtProductColor->execute([
+                    'name' => $productColor['name'] ?? $data['name'],
+                    'picture_url' => $productColor['picture_url'],
+                    'product_id' => $productId,
+                    'color_id' => $productColor['color_id']
+                ]);
+
+                $productColorId = $this->pdo->lastInsertId();
+                $productSizeIds = [];
+
+                // insert product size entries
+                foreach ($productColor['size_data'] as $sizeData) {
+                    $stmtProductSize->execute([
+                        'product_color_id' => $productColorId,
+                        'price' => $sizeData['price'],
+                        'size_id' => $sizeData['size_id']
+                    ]);
+                    $productSizeIds[] = $this->pdo->lastInsertId();
+                }
+
+                // use JOIN to select the product color and sizes
+                $stmtProductColorSizes = $this->pdo->prepare("
+                    SELECT 
+                        pc.id AS product_color_id, 
+                        pc.name AS color_name, 
+                        pc.picture_url, 
+                        pc.color_id, 
+                        ps.price, 
+                        s.size_description 
+                    FROM product_color pc
+                    LEFT JOIN product_size ps ON ps.product_color_id = pc.id
+                    LEFT JOIN size s ON s.id = ps.size_id
+                    WHERE pc.product_id = :product_id AND pc.id = :product_color_id
+                ");
+
+                $stmtProductColorSizes->execute([
+                    'product_id' => $productId,
+                    'product_color_id' => $productColorId
+                ]);
+
+                $productSizes = [];
+                while ($row = $stmtProductColorSizes->fetch(\PDO::FETCH_ASSOC)) {
+                    $productSizes[] = [
+                        'price' => $row['price'],
+                        'size_description' => $row['size_description'],
+                    ];
+                }
+
+                $productColors[] = [
+                    'product_color_id' => $productColorId,
+                    'name' => $productColor['name'] ?? $data['name'],
+                    'picture_url' => $productColor['picture_url'],
+                    'color_id' => $productColor['color_id'],
+                    'product_size' => $productSizes
+                ];
+            }
+
+            $this->pdo->commit();
+
+            return [
+                'product' => [
+                    'product_id' => $productId,
+                    'name' => $data['name'],
+                    'description' => $data['description'],
+                    'product_colors' => $productColors
+                ]
+            ];
+
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+            throw $e;
+        }
     }
 
     public function update(int $id, array $data)
