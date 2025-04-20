@@ -24,11 +24,53 @@ class ProductRepository implements ProductRepositoryInterface
     }
     
 
-    public function getById(int $id)
+    public function getById(int $id): array
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM product WHERE id = :id");
+        $stmt = $this->pdo->prepare("
+            SELECT 
+                p.id AS product_id, 
+                p.name, 
+                p.description, 
+                pc.id AS product_color_id, 
+                pc.name AS color_name, 
+                pc.picture_url, 
+                pc.color_id, 
+                ps.price,
+                ps.stock,
+                s.size_description AS size
+            FROM product p
+            LEFT JOIN product_color pc ON pc.product_id = p.id
+            LEFT JOIN product_size ps ON ps.product_color_id = pc.id
+            LEFT JOIN size s ON s.id = ps.size_id
+            WHERE p.id = :id
+        ");
+
         $stmt->execute(['id' => $id]);
-        $product = $stmt->fetch(\PDO::FETCH_ASSOC) ?: null;
+        // var_dump($stmt->fetchAll(\PDO::FETCH_ASSOC));
+        $productData = $stmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
+        
+        if (empty($productData)) {
+            return [];
+        }
+
+        $product = [
+            'product_id' => $productData[0]['product_id'],
+            'name' => $productData[0]['name'],
+            'description' => $productData[0]['description'],
+            'product_colors' => []
+        ];
+        
+        foreach ($productData as $row) {
+            $product['product_colors'][] = [
+                'picture_url' => $row['picture_url'],
+                'product_color_id' => $row['product_color_id'],
+                'color_id' => $row['color_id'],
+                'name' => $row['color_name'],
+                'price' => $row['price'],
+                'stock' => $row['stock'],
+                'size' => $row['size'],
+            ];
+        }
 
         return $product;
     }
