@@ -15,14 +15,33 @@ class ProductRepository implements ProductRepositoryInterface
         $this->pdo = Connection::getPDO();
     }
 
-    public function getAll(): array
+    public function getAll()
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM product");
+        $stmt = $this->pdo->prepare("
+            SELECT 
+                p.id AS product_id,
+                p.name,
+                ps.price
+            FROM product p
+            JOIN product_color pc ON pc.product_id = p.id
+            JOIN product_size ps ON ps.product_color_id = pc.id
+            WHERE pc.id = (
+                SELECT MIN(pc2.id)
+                FROM product_color pc2
+                WHERE pc2.product_id = p.id
+            )
+            AND ps.id = (
+                SELECT MIN(ps2.id)
+                FROM product_size ps2
+                WHERE ps2.product_color_id = pc.id
+            )
+        ");
+
         $stmt->execute();
-        
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
+        $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $data;
     }
-    
 
     public function getById(int $id): array
     {
