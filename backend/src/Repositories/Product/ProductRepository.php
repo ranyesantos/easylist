@@ -108,7 +108,7 @@ class ProductRepository implements ProductRepositoryInterface
                 'description' => $data['description'],
             ]);
 
-            $productId = $this->pdo->lastInsertId();
+            $productId = (int)$this->pdo->lastInsertId();
 
             $stmtProductColor = $this->pdo->prepare("
                 INSERT INTO product_color (name, picture_url, product_id, color_id)
@@ -123,7 +123,7 @@ class ProductRepository implements ProductRepositoryInterface
             $productColors = [];
 
             // insert product_color entries
-            foreach ($data['product_colors'] as $key => $productColor) {
+            foreach ($data['product_colors'] as $productColor) {
                 // insert the product color
                 $stmtProductColor->execute([
                     'name' => $productColor['name'] ?? $data['name'],
@@ -132,8 +132,7 @@ class ProductRepository implements ProductRepositoryInterface
                     'color_id' => $productColor['color_id']
                 ]);
 
-                $productColorId = $this->pdo->lastInsertId();
-                $productSizeIds = [];
+                $productColorId = (int)$this->pdo->lastInsertId();
 
                 // insert product size entries
                 foreach ($productColor['size_data'] as $sizeData) {
@@ -142,7 +141,7 @@ class ProductRepository implements ProductRepositoryInterface
                         'price' => $sizeData['price'],
                         'size_id' => $sizeData['size_id']
                     ]);
-                    $productSizeIds[] = $this->pdo->lastInsertId();
+                    $productSizeIds[] = (int)$this->pdo->lastInsertId();
                 }
 
                 // use JOIN to select the product color and sizes
@@ -185,12 +184,10 @@ class ProductRepository implements ProductRepositoryInterface
             $this->pdo->commit();
 
             return [
-                'product' => [
-                    'product_id' => $productId,
-                    'name' => $data['name'],
-                    'description' => $data['description'],
-                    'product_colors' => $productColors
-                ]
+                'product_id' => $productId,
+                'name' => $data['name'],
+                'description' => $data['description'],
+                'product_colors' => $productColors
             ];
 
         } catch (Exception $e) {
