@@ -135,15 +135,16 @@ class ProductRepository implements ProductRepositoryInterface
                 $productColorId = (int)$this->pdo->lastInsertId();
 
                 // insert product size entries
-                foreach ($productColor['size_data'] as $sizeData) {
-                    $stmtProductSize->execute([
-                        'product_color_id' => $productColorId,
-                        'price' => $sizeData['price'],
-                        'size_id' => $sizeData['size_id']
-                    ]);
-                    $productSizeIds[] = (int)$this->pdo->lastInsertId();
+                if (isset($productColor['size_data']) && is_array($productColor['size_data'])){
+                    foreach ($productColor['size_data'] as $sizeData) {
+                        $stmtProductSize->execute([
+                            'product_color_id' => $productColorId,
+                            'price' => $sizeData['price'],
+                            'size_id' => $sizeData['size_id']
+                        ]);
+                    }
                 }
-
+                
                 // use JOIN to select the product color and sizes
                 $stmtProductColorSizes = $this->pdo->prepare("
                     SELECT 
