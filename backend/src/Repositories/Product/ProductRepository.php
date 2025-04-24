@@ -198,12 +198,64 @@ class ProductRepository implements ProductRepositoryInterface
 
     public function update(int $id, array $data)
     {
-        $stmt = $this->pdo->prepare("UPDATE product SET name = :name, description = :description WHERE id = :id");
+        $this->pdo->beginTransaction();
+
+        $stmt = $this->pdo->prepare("
+            UPDATE product SET name = :name, description = :description WHERE id = :id"
+        );
         $stmt->execute([
             'id' => $id,
             'name' => $data['name'],
             'description' => $data['description']
         ]);
+
+        $stmtProductColor = $this->pdo->prepare("
+            UPDATE product_color
+            SET name = :name,
+                picture_url = :picture_url,
+                color_id = :color_id
+            WHERE id = :product_color_id
+            ;
+        ");
+
+        $stmtSelectProductColor = $this->pdo->prepare("
+            SELECT * FROM product_color WHERE product_id = :product_id
+        ");
+        $stmtSelectProductColor->execute([
+            'product_id' => $id
+        ]);
+        
+        $stmtProductColorSizes = $this->pdo->prepare("
+            UPDATE product_size
+            SET price = :price,
+                stock = :stock,
+                size_id = :size_id
+            WHERE product_color_id = :product_color_id
+            AND size_id = :size_id;
+        ");
+
+        foreach ($data['product_colors'] as $productColor){
+            
+            $stmtProductColor->execute([
+                'name' => $productColor['name'],
+                'picture_url' => $productColor['picture_url'],
+                'product_color_id' => $productColor['id'],
+                'color_id' => $productColor['color_id']
+            ]);
+            
+            if (isset($productColor['size_data']) && is_array($productColor['size_data'])){
+                foreach ($productColor['size_data'] as $sizeData){
+                    $stmtProductColorSizes->execute([
+                        'price' => $sizeData['price'],
+                        'stock' => $sizeData['stock'],
+                        'product_color_id' => $productColor['id'],
+                        'size_id' => $sizeData['size_id']
+                    ]);
+                }
+            }
+        }
+
+        $this->pdo->commit();
 
         return $this->getById($id);
     }
