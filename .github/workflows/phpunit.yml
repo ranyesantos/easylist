@@ -32,9 +32,9 @@ jobs:
         run: |
           docker-compose -f docker-compose.yml up -d php web
 
-      - name: install composer dependencies
+      - name: Install composer dependencies
         run: |
-          docker-compose exec -T php composer install
+          docker-compose exec -T php composer install --no-scripts --no-plugins --prefer-dist
 
       - name: run PHPUnit tests
         run: docker-compose exec -T php vendor/bin/phpunit --testdox
