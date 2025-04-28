@@ -12,7 +12,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-    
+
+      - name: Create dummy backend/.env
+        run: |
+          mkdir -p backend
+          echo "DB_HOST=localhost" >> backend/.env
+          echo "DB_NAME=test" >> backend/.env
+          echo "DB_USER=root" >> backend/.env
+          echo "DB_PASSWORD=test" >> backend/.env
+          echo "MYSQL_ROOT_PASSWORD=test" >> backend/.env
+
       - name: install docker compose
         run: |
           sudo curl -L "https://github.com/docker/compose/releases/download/v2.6.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
@@ -22,10 +31,15 @@ jobs:
       - name: Set up Docker Compose
         run: |
           docker-compose -f docker-compose.yml up -d php web
-
-      - name: install composer dependencies
+          
+      - name: Install unzip and git inside PHP container
         run: |
-          docker-compose exec -T php composer install
+          docker-compose exec -T php apt-get update
+          docker-compose exec -T php apt-get install -y unzip git
+          
+      - name: Install composer dependencies
+        run: |
+          docker-compose exec -T php composer install --no-scripts --no-plugins --prefer-dist
 
       - name: run PHPUnit tests
         run: docker-compose exec -T php vendor/bin/phpunit --testdox
