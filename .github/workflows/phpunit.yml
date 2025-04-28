@@ -31,7 +31,12 @@ jobs:
       - name: Set up Docker Compose
         run: |
           docker-compose -f docker-compose.yml up -d php web
-
+          
+      - name: Install unzip and git inside PHP container
+        run: |
+          docker-compose exec -T php apt-get update
+          docker-compose exec -T php apt-get install -y unzip git
+          
       - name: Install composer dependencies
         run: |
           docker-compose exec -T php composer install --no-scripts --no-plugins --prefer-dist
