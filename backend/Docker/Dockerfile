@@ -17,12 +17,17 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # instala o Composer
+
+RUN apt-get install -y curl
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # define o diretório de trabalho
 WORKDIR /var/www/html
 
-# expoem a porta para o xdebug
-EXPOSE 9003
+# copia o código do projeto (se você já tiver o código na pasta atual)
+COPY . .
 
-CMD ["php-fpm"]
+# expoem a porta para o xdebug
+EXPOSE 9000
+
+CMD ["sh", "-c", "composer install && php-fpm"]

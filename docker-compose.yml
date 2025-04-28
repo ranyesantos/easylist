@@ -7,28 +7,33 @@ services:
       - ./backend:/var/www/html
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     networks:
-      - backend-network
-
-  php:
-    build:
-      context: './Docker'
-    volumes:
-      - ./backend:/var/www/html
-    networks:
-      - backend-network
+      - app-network
 
   db:
     image: mysql:8.0
     container_name: mysql-database
     ports:
       - "3307:3306"
+    env_file:
+      - ./backend/.env
     volumes:
       - db-data:/var/lib/mysql
     networks:
-      - backend-network
+      - app-network
+
+  php:
+    build:
+      context: './backend'
+      dockerfile: 'Docker/Dockerfile'
+    volumes:
+      - ./backend:/var/www/html
+    networks:
+      - app-network
+
+
 
 networks:
-  backend-network:
+  app-network:
     driver: bridge
 
 volumes:
