@@ -21,7 +21,7 @@ class ProductController
         try {
             $response = [
                 'status' => 'success',
-                'data' => $this->productService->getAll(),
+                'products' => $this->productService->getAll(),
             ];
             Request::sendJsonResponse($response, HttpStatusCode::HTTP_OK);
         } catch (\Exception $e) {
