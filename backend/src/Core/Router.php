@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Core;
-use App\Routes\ApiRoutes;
+
 use App\Utils\ContainerSetters;
 use App\Utils\ValidationHandler;
 use ReflectionMethod;
@@ -12,9 +12,9 @@ class Router
     public static function route($uri, $method): void 
     {
         $container = ContainerSetters::init();
-        // $routes = ApiRoutes::getRoutes();
+        
         $routes = require __DIR__ . '/../../Routes/api.php';
-        // var_dump($routes);
+
         $controllerPath = 'App\\Http\\Controllers\\API\\V1\\';
         $matched = false;
         foreach ($routes[$method] as $route => $controllerAction) {

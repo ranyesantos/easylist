@@ -1,63 +1,63 @@
 <?php
 
+$prefix = 'api/v1/';
+
 return [
     'GET' => [
-        'products' => 'ProductController@index',
-        'products/(\d+)' => 'ProductController@show',
+        $prefix . 'products' => 'ProductController@index',
+        $prefix . 'products/(\d+)' => 'ProductController@show',
 
-        'categories' => 'CategoryController@index',
-        'categories/(\d+)' => 'CategoryController@show',
+        $prefix . 'categories' => 'CategoryController@index',
+        $prefix . 'categories/(\d+)' => 'CategoryController@show',
 
-        'customers' => 'CustomerController@index',
-        'customers/(\d+)' => 'CustomerController@show',
+        $prefix . 'customers' => 'CustomerController@index',
+        $prefix . 'customers/(\d+)' => 'CustomerController@show',
 
-        'colors' => 'ColorController@index',
-        'colors/(\d+)' => 'ColorController@show',
+        $prefix . 'colors' => 'ColorController@index',
+        $prefix . 'colors/(\d+)' => 'ColorController@show',
 
-        'sizes' => 'SizeController@index',
-        'sizes/(\d+)' => 'SizeController@show',
+        $prefix . 'sizes' => 'SizeController@index',
+        $prefix . 'sizes/(\d+)' => 'SizeController@show',
     ],
     'POST' => [
-        'products' => [
+        $prefix . 'products' => [
             'controller' => 'ProductController@store'
         ],
-        'categories' => [
+        $prefix . 'categories' => [
             'controller' => 'CategoryController@store'
         ],
-        'customers' => [
+        $prefix . 'customers' => [
             'controller' => 'CustomerController@store'
         ],
-        'colors' => [
+        $prefix . 'colors' => [
             'controller' => 'ColorController@store'
         ],
-        'sizes' => [
+        $prefix . 'sizes' => [
             'controller' => 'SizeController@store'
         ],
     ],
     'PUT' => [
-        'products/(\d+)' => [
+        $prefix . 'products/(\d+)' => [
             'controller' => 'ProductController@update'
         ],
-        'categories/(\d+)' => [
+        $prefix . 'categories/(\d+)' => [
             'controller' => 'CategoryController@update'
         ],
-        'customers/(\d+)' => [
+        $prefix . 'customers/(\d+)' => [
             'controller' => 'CustomerController@update'
         ],
-        'colors/(\d+)' => [
+        $prefix . 'colors/(\d+)' => [
             'controller' => 'ColorController@store'
         ],
-        'sizes/(\d+)' => [
+        $prefix . 'sizes/(\d+)' => [
             'controller' => 'SizeController@update'
         ],
     ],
     'DELETE' => [
-        'products/(\d+)' => 'ProductController@delete',
-        'categories/(\d+)' => 'CategoryController@delete',
-        'customers/(\d+)' => 'CustomerController@delete',
-        'colors/(\d+)' => 'ColorController@delete',
-        'sizes/(\d+)' => 'SizeController@delete',
-    ]
+        $prefix . 'products/(\d+)' => 'ProductController@delete',
+        $prefix . 'categories/(\d+)' => 'CategoryController@delete',
+        $prefix . 'customers/(\d+)' => 'CustomerController@delete',
+        $prefix . 'colors/(\d+)' => 'ColorController@delete',
+        $prefix . 'sizes/(\d+)' => 'SizeController@delete',
+    ],
 ];
-
-
