@@ -1,9 +1,21 @@
 <template>
     <div>
-      <h1>Welcome to the Products Page</h1>
-      <!-- The Products component will be rendered here -->
-      <Products />
-      <Sizes />
+        <h1>Welcome to the Products Page</h1>
+        <div class="products">
+            <h2>Produtos</h2>
+            <Products />
+        </div>
+
+        <div class="sizes">
+            <h2>tamanhos</h2>
+            <Sizes />
+        </div>
+
+        <div class="products">
+            <h2>Cores</h2>
+            <Colors />
+        </div>
+      
     </div>
 </template>
 
@@ -11,12 +23,14 @@
     import { defineComponent } from 'vue';
     import Products from '@/components/Products/ProductList.vue'; // Adjust path if needed
     import Sizes from '@/components/Sizes/SizeList.vue';
-    
+    import Colors from '@/components/Colors/ColorList.vue';
+
     export default defineComponent({
         name: 'ProductsView',
         components: {
             Products, // Registering the Products component here
-            Sizes
+            Sizes,
+            Colors
         },
     });
 </script>

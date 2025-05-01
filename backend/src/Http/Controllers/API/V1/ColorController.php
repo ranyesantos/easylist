@@ -24,7 +24,7 @@ class ColorController
         try {
             $response = [
                 'status' => 'success',
-                'data' => $this->colorService->getAll(),
+                'colors' => $this->colorService->getAll(),
             ];
             Request::sendJsonResponse($response, HttpStatusCode::HTTP_OK);
         
