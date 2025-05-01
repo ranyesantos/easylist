@@ -8,15 +8,17 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, onMounted } from 'vue';
-  import { fetchProducts, Product } from '@/api/products';
+  import { ref, onMounted, reactive } from 'vue';
+  import { getAllProducts } from '@/api/services/productService';
+  import { ProductInterface } from '@/types/Product';
 
-  const products = ref<Product[]>([]);
+  let products = reactive<ProductInterface[]>([]);
   const loading = ref(true);
 
   onMounted(async () => {
     try {
-      products.value = await fetchProducts();
+      products = await getAllProducts();
+      console.log(products);
     } finally {
       loading.value = false;
     }
