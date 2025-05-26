@@ -8,18 +8,18 @@
 </template>
 
 <script setup lang="ts">
-    import { getAllSizes, SizeInterface } from '@/api/services/sizeService';
-    import { onMounted, reactive, ref } from 'vue'
+import { getAllSizes, SizeInterface } from '@/api/services/sizeService';
+import { onMounted, reactive, ref } from 'vue'
 
-    let sizes = reactive<SizeInterface[]>([]);
-    const loading = ref(true);
+let sizes = reactive<SizeInterface[]>([]);
+const loading = ref(true);
 
-    onMounted(async () => {
-        try {
-            sizes = await getAllSizes();
-            console.log('sizes', sizes);
-        } finally {
-            loading.value = false;
-        }
-    });
+onMounted(async () => {
+    try {
+        sizes = await getAllSizes();
+        console.log('sizes', sizes);
+    } finally {
+        loading.value = false;
+    }
+});
 </script>
