@@ -4,24 +4,24 @@ namespace App\Services;
 
 use App\Exceptions\NotFoundException;
 use \App\Repositories\Product\ProductRepositoryInterface;
+use App\Utils\ServiceUtils;
 
 class ProductService 
 {
 
-    private $productRepository;
-
     public function __construct(
-        ProductRepositoryInterface $productRepository
+        private ProductRepositoryInterface $productRepository,
+        private ProductColorService $productColorService,
+        private ProductSizeService $productSizeService,    
+        private ServiceUtils $serviceUtils
     ) 
-    {
-        $this->productRepository = $productRepository;
-    }
+    {}
 
     public function getAll(): array 
     {
         $products = $this->productRepository->getAll();
 
-        return $products;
+        return $this->serviceUtils->formatProductData($products);
     }
 
     public function getById(int $id): mixed
@@ -38,8 +38,27 @@ class ProductService
     public function create(array $data)
     {
         $product = $this->productRepository->create($data);
+        
+        if (isset($data['product_colors'])){
+            $productColorData = $data['product_colors'];
 
-        return $product;
+            foreach ($productColorData as &$data) {
+                $sizeData[] = $data['size_data'];
+                unset($data['size_data']);
+                
+                $productColor[] = $this->productColorService->create($product['id'], $data);
+            }
+            for($i = 0; $i < count($productColor); $i++){
+                $productId = $productColor[$i]['id'];
+
+                for($p = 0; $p < count($sizeData[$i]); $p++){
+                    $this->productSizeService->create($productId, $sizeData[$i][$p]);
+                }
+
+            }
+        }
+
+        return $this->getById($product['id']);
     }
     
     public function update(int $id, array $data)
