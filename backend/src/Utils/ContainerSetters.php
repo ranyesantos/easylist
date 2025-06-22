@@ -31,10 +31,33 @@ class ContainerSetters
             return new \App\Repositories\Size\SizeRepository();
         });
 
+        $container->set('ProductColorRepositoryInterface', function() {
+            return new \App\Repositories\ProductColor\ProductColorRepository();
+        });
+
+        $container->set('ProductSizeRepositoryInterface', function() {
+            return new \App\Repositories\ProductSize\ProductSizeRepository();;
+        });
+
         //<-----services----->
+        $container->set('ProductSizeService', function() use ($container){
+            return new \App\Services\ProductSizeService(
+                $container->get('ProductSizeRepositoryInterface')
+            );
+        });
+
+        $container->set('ProductColorService', function() use ($container){
+            return new \App\Services\ProductColorService(
+                $container->get('ProductColorRepositoryInterface')
+            );
+        });
+
         $container->set('ProductService', function() use ($container) {
             return new \App\Services\ProductService(
-                $container->get('ProductRepositoryInterface')
+                $container->get('ProductRepositoryInterface'),
+                $container->get('ProductColorService'),
+                $container->get('ProductSizeService'),
+                $container->get('ServiceUtils')
             );
         });
 
@@ -87,6 +110,11 @@ class ContainerSetters
         $container->set('Request', function()  {
             return new \App\Http\Helpers\Request;
         });
+
+        $container->set('ServiceUtils', function()  {
+            return new \App\Utils\ServiceUtils;
+        });
+
 
         return $container;
     }

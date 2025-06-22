@@ -21,7 +21,7 @@ class SizeController
         try {
             $response = [
                 'status' => 'success',
-                'data' => $this->sizeService->getAll(),
+                'sizes' => $this->sizeService->getAll(),
             ];
             Request::sendJsonResponse($response, HttpStatusCode::HTTP_OK);
         } catch (\Exception $e) {
