@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API\V1;
 
-use App\Exceptions\NotFoundException;
 use App\Http\Helpers\Request;
 use App\Services\CategoryService;
 use App\Utils\HttpStatusCode;
@@ -19,120 +18,27 @@ class CategoryController
     
     public function index(): void
     {
-        try {
-            $response = [
-                'status' => 'success',
-                'data' => $this->categoryService->getAll(),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_OK);
-        
-        } catch (\Exception $e) {
-            $response = [
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        Request::sendJsonResponse($this->categoryService->getAll(), HttpStatusCode::HTTP_OK);
     }
 
     public function show(int $id): void
     {
-        try {
-            $response = [
-                'status' => 'success',
-                'data' => $this->categoryService->getById($id),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_OK);
-            
-        } catch (NotFoundException $e) {
-            $response = [
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_NOT_FOUND);
-    
-        } catch (\Exception $e) {
-            $response = [
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        Request::sendJsonResponse($this->categoryService->getById($id), HttpStatusCode::HTTP_OK);
     }
 
     public function store(Request $request): void
     {
-        try {
-            $response = [
-                'status' => 'success',
-                'data' => $this->categoryService->create($request->getBody())
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_CREATED);
-
-        } catch (NotFoundException $e) {
-            $response = [
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_NOT_FOUND);
-
-        } catch (\Exception $e) {
-            $response = [
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        Request::sendJsonResponse($this->categoryService->create($request->getBody()), HttpStatusCode::HTTP_CREATED);
     }
 
-    public function update(Request $request, $id): void 
+    public function update(Request $request, int $id): void 
     {
-        try {
-            $response = [
-                'status' => 'success',
-                'data' => $this->categoryService->update($id, $request->getBody())
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_OK);
-
-        } catch (NotFoundException $e) {
-            $response = [
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_NOT_FOUND);
-
-        } catch (\Exception $e) {
-            $response = [
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        Request::sendJsonResponse($this->categoryService->update($id, $request->getBody()), HttpStatusCode::HTTP_OK);
     }
 
-    public function delete($id): void 
+    public function delete(int $id): void 
     {
-        try {
-            $this->categoryService->delete($id);
-
-            $response = [
-                'status' => 'success',
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_NO_CONTENT);
-            
-        } catch (NotFoundException $e) {
-            $response = [
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_NOT_FOUND);
-
-        } catch (\Exception $e) {
-            $response = [
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        $this->categoryService->delete($id);
+        Request::sendJsonResponse(null,HttpStatusCode::HTTP_NO_CONTENT);
     }
 }

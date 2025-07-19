@@ -13,13 +13,14 @@ class Request
         if ($data === null) {
             http_response_code(400);
             echo json_encode(["error" => "Invalid JSON"]);
+
             exit;
         }
         
         return $data;
     }
 
-    public static function sendJsonResponse($response, $statusCode)
+    public static function sendJsonResponse($response, $statusCode): never
     {
         http_response_code($statusCode);
         header('Content-Type: application/json; charset=UTF-8');
