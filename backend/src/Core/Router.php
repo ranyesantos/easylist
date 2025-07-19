@@ -75,7 +75,9 @@ class Router
                     if (!class_exists($controllerPath . $controller)){
                         return;
                     }
+
                     $controllerInstance = $container->get($controller);
+
                     if (method_exists($controllerInstance, $action)) {
                         $reflectionMethod = new ReflectionMethod($controllerInstance, $action);
                         //$params recebe os parametros esperados pelo método do controller
@@ -92,7 +94,8 @@ class Router
                                 $args[] = $id;
                             }
                         }
-                        ExceptionHandler::handle($controllerInstance, $action, ...$args);
+                        
+                        ExceptionHandler::handle($controllerInstance, $action, $args);
 
                         $matched = true;
                     }

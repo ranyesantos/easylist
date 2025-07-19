@@ -8,10 +8,16 @@ use App\Utils\HttpStatusCode;
 
 class ExceptionHandler
 {
-    public static function handle($controllerInstance, $action, $params = null): void
+    public static function handle($controllerInstance, $action, $args = []): void
     {
         try {
-          $params ? $controllerInstance->$action() : $controllerInstance->$action($params);
+            if (empty($args)) {
+                $controllerInstance->$action();
+            } elseif (is_array($args)) {
+                $controllerInstance->$action(...$args);
+            } else {
+                $controllerInstance->$action($args);
+            }
 
         } catch (NotFoundException $e) {
             Request::sendJsonResponse([
