@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API\V1;
 
-use App\Exceptions\NotFoundException;
 use App\Http\Helpers\Request;
 use App\Services\ColorService;
 use App\Utils\HttpStatusCode;
@@ -21,122 +20,29 @@ class ColorController
 
     public function index(): void
     {
-        try {
-            $response = [
-                'status' => 'success',
-                'colors' => $this->colorService->getAll(),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_OK);
-        
-        } catch (\Exception $e) {
-            $response = [
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_INTERNAL_SERVER_ERROR);
-        }
-        
+        Request::sendJsonResponse($this->colorService->getAll(), HttpStatusCode::HTTP_OK);
     }
 
     public function show(int $id): void 
     {
-        try {
-            $response = [
-                'status' => 'success',
-                'data' => $this->colorService->getById($id),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_OK);
-            
-        } catch (NotFoundException $e) {
-            $response = [
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_NOT_FOUND);
-
-        } catch (\Exception $e) {
-            $response = [
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        Request::sendJsonResponse($this->colorService->getById($id), HttpStatusCode::HTTP_OK);
     }
 
     public function store(Request $request): void 
     {
-        try {
-            $response = [
-                'status' => 'success',
-                'data' => $this->colorService->create($request->getBody())
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_OK);
-            
-        } catch (NotFoundException $e) {
-            $response = [
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_NOT_FOUND);
-
-        } catch (\Exception $e) {
-            $response = [
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        Request::sendJsonResponse($this->colorService->create($request->getBody()), HttpStatusCode::HTTP_OK);
     }
 
     public function update(Request $request, int $id): void 
     {
-        try {
-            $response = [
-                'status' => 'success',
-                'data' => $this->colorService->update($id, $request->getBody())
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_OK);
-            
-        } catch (NotFoundException $e) {
-            $response = [
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_NOT_FOUND);
-
-        } catch (\Exception $e) {
-            $response = [
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        Request::sendJsonResponse($this->colorService->update($id, $request->getBody()), HttpStatusCode::HTTP_OK);
     }
 
     public function delete(int $id): void 
     {
-        try {
-            $response = [
-                'status' => 'success',
-                'data' => $this->colorService->delete($id),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_OK);
+        $this->colorService->delete($id);
 
-        } catch (NotFoundException $e) {
-            $response = [
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_NOT_FOUND);
-        
-        } catch (\Exception $e) {
-            $response = [
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ];
-            Request::sendJsonResponse($response, HttpStatusCode::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        Request::sendJsonResponse(null, HttpStatusCode::HTTP_OK);
     }
-
 
 }
