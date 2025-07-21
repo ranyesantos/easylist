@@ -4,15 +4,13 @@ namespace App\Repositories\Size;
 
 use App\Db\Connection;
 use App\Repositories\Size\SizeRepositoryInterface;
+use PDO;
 
 class SizeRepository implements SizeRepositoryInterface
 {
-    private $pdo;
 
-    public function __construct() 
-    {
-        $this->pdo = Connection::getPDO();
-    }
+    public function __construct(private PDO $pdo)
+    {}
 
     public function getAll(): array
     {

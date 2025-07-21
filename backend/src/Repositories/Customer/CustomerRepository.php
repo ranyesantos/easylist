@@ -4,15 +4,12 @@ namespace App\Repositories\Customer;
 
 use App\Db\Connection;
 use App\Repositories\Customer\CustomerRepositoryInterface;
+use PDO;
 
 class CustomerRepository implements CustomerRepositoryInterface
 {
-    private $pdo;
-
-    public function __construct() 
-    {
-        $this->pdo = Connection::getPDO();
-    }
+    public function __construct(private PDO $pdo)
+    {}
 
     public function getAll(): array
     {

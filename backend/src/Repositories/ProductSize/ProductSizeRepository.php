@@ -3,15 +3,12 @@
 namespace App\Repositories\ProductSize;
 
 use App\Db\Connection;
+use PDO;
 
 class ProductSizeRepository implements ProductSizeRepositoryInterface
 {
-    private $pdo;
-
-    public function __construct() 
-    {
-        $this->pdo = Connection::getPDO();
-    }
+    public function __construct(private PDO $pdo)
+    {}
 
     public function create($productColorId, $data)
     {
