@@ -1,5 +1,7 @@
 <?php 
 
+namespace Tests\Unit;
+
 use App\Exceptions\NotFoundException;
 use App\Repositories\Product\ProductRepositoryInterface;
 use App\Services\ProductColorService;
@@ -24,7 +26,7 @@ class ProductServiceTest extends TestCase
         $this->productColorServiceMock = $this->createMock(ProductColorService::class);
         $this->productSizeServiceMock = $this->createMock(ProductSizeService::class);
         $this->serviceUtilsMock = $this->createMock(ServiceUtils::class);
-        $this->pdoMock = $this->createMock(PDO::class);
+        $this->pdoMock = $this->createMock(\PDO::class);
 
         $this->productService = new ProductService(
             $this->productRepositoryMock,

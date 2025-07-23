@@ -1,5 +1,7 @@
 <?php 
 
+namespace Tests\Unit;
+
 use App\Exceptions\NotFoundException;
 use App\Repositories\Size\SizeRepositoryInterface;
 use App\Services\SizeService;

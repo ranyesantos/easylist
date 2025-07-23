@@ -1,4 +1,5 @@
 <?php 
+namespace Tests\Unit;
 
 use App\Exceptions\NotFoundException;
 use App\Repositories\Category\CategoryRepositoryInterface;

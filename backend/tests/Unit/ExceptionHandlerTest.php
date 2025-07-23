@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit;
+
 use App\Exceptions\NotFoundException;
 use App\Http\Helpers\Request;
 use App\Http\Helpers\ResponseHandler;
