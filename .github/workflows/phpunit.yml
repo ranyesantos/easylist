@@ -24,7 +24,7 @@ jobs:
         working-directory: ./backend
         
       - name: Run Dump Autoload
-        run: composer dump-autoload
+        run: composer dump-autoload -o
         working-directory: ./backend
 
       - name: Run PHPUnit tests
