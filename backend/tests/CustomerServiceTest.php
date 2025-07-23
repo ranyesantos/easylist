@@ -1,7 +1,5 @@
 <?php 
 
-namespace App\Tests;
-
 use App\Exceptions\NotFoundException;
 use App\Repositories\Customer\CustomerRepositoryInterface;
 use App\Services\CustomerService;

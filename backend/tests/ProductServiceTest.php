@@ -1,14 +1,11 @@
 <?php 
 
-namespace App\Tests;
-
 use App\Exceptions\NotFoundException;
 use App\Repositories\Product\ProductRepositoryInterface;
 use App\Services\ProductColorService;
 use App\Services\ProductService;
 use App\Services\ProductSizeService;
 use App\Utils\ServiceUtils;
-use PDO;
 use PHPUnit\Framework\TestCase;
 
 class ProductServiceTest extends TestCase

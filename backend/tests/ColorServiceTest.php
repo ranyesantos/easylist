@@ -1,7 +1,5 @@
 <?php 
 
-namespace App\Tests;
-
 use App\Exceptions\NotFoundException;
 use App\Repositories\Color\ColorRepositoryInterface;
 use App\Services\ColorService;
