@@ -2,6 +2,7 @@
 
 namespace App\Core;
 
+use App\Http\Helpers\ResponseHandler;
 use App\Utils\ContainerSetters;
 use App\Utils\ValidationHandler;
 use App\Validators\ExceptionHandler;
@@ -18,6 +19,8 @@ class Router
 
         $controllerPath = 'App\\Http\\Controllers\\API\\V1\\';
         $matched = false;
+        $exceptionHandler = new ExceptionHandler( new ResponseHandler());
+
         foreach ($routes[$method] as $route => $controllerAction) {
             if ($uri === $route) {
 
@@ -33,21 +36,15 @@ class Router
 
                 $controllerInstance = $container->get($controller);
                 
-                if (isset($controllerAction['validation'])) {
-                    $validatorClass = $controllerAction['validation'];
-                    ValidationHandler::handler($validatorClass, $container->get('Request'));
-                    
-                }
-
                 if (method_exists($controllerInstance, $action)) {
                     
                     $reflection = new ReflectionMethod($controllerInstance, $action);
                     
                     if ($reflection->getNumberOfParameters() > 0) {
-                        ExceptionHandler::handle($controllerInstance, $action, $container->get('Request'));
+                        $exceptionHandler->handle( $controllerInstance, $action, $container->get('Request'));
 
                     } else {
-                        ExceptionHandler::handle($controllerInstance, $action);
+                        $exceptionHandler->handle($controllerInstance, $action);
                         $controllerInstance->$action();
 
                     }
@@ -63,7 +60,7 @@ class Router
                 if (preg_match("~^$route$~", $uri, $matches)) {
 
                     if (isset($matches[1])) {
-                        $id = $matches[1];
+                        $id = (int) $matches[1];
                     }
 
                     if (is_array($controllerAction)){
@@ -95,7 +92,7 @@ class Router
                             }
                         }
                         
-                        ExceptionHandler::handle($controllerInstance, $action, $args);
+                        $exceptionHandler->handle($controllerInstance, $action, $args);
 
                         $matched = true;
                     }
