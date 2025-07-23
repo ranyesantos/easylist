@@ -3,15 +3,12 @@
 namespace App\Repositories\ProductColor;
 
 use App\Db\Connection;
+use PDO;
 
 class ProductColorRepository implements ProductColorRepositoryInterface
 {
-    private $pdo;
-
-    public function __construct() 
-    {
-        $this->pdo = Connection::getPDO();
-    }
+    public function __construct(private PDO $pdo)
+    {}
 
     public function create($productId, $data)
     {

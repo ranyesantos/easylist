@@ -25,12 +25,13 @@ class CustomerService
 
     public function getById(int $id): array
     {
-        
-        if (!$this->customerRepository->getById($id)) {
+
+        $customer = $this->customerRepository->getById($id);
+
+        if (!$customer) {
             throw new NotFoundException("Cliente não encontrado");
         }
 
-        $customer = $this->customerRepository->getById($id);
 
         return $customer;
     }

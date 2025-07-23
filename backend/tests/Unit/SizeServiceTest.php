@@ -1,6 +1,6 @@
 <?php 
 
-namespace App\Tests;
+namespace Tests\Unit;
 
 use App\Exceptions\NotFoundException;
 use App\Repositories\Size\SizeRepositoryInterface;
@@ -97,18 +97,18 @@ class SizeServiceTest extends TestCase
     public function testCreateWithValidData()
     {
         $data = ['size_description' => "XS"];
-        $expectResult = ['id' => 1, 'size_description' => "XS"];
+        $expectedResult = ['id' => 1, 'size_description' => "XS"];
 
         $sizeRepositoryMock = $this->createMock(SizeRepositoryInterface::class);
         $sizeRepositoryMock
             ->method('create')
             ->with($data)
-            ->willReturn($expectResult);
+            ->willReturn($expectedResult);
         
         $sizeService = new SizeService($sizeRepositoryMock);
         $result = $sizeService->create($data);
 
-        $this->assertEquals($expectResult, $result);
+        $this->assertEquals($expectedResult, $result);
     }
 
     //update method tests

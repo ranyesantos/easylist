@@ -3,12 +3,14 @@
 namespace App\Validators;
 
 use App\Exceptions\NotFoundException;
-use App\Http\Helpers\Request;
 use App\Utils\HttpStatusCode;
 
 class ExceptionHandler
 {
-    public static function handle($controllerInstance, $action, $args = []): void
+    public function __construct(private $responseHandler)
+    {}
+
+    public function handle($controllerInstance, $action, $args = []): void
     {
         try {
             if (empty($args)) {
@@ -20,19 +22,19 @@ class ExceptionHandler
             }
 
         } catch (NotFoundException $e) {
-            Request::sendJsonResponse([
+            $this->responseHandler->json([
                 'status' => 'error',
                 'message' => $e->getMessage()
             ], HttpStatusCode::HTTP_NOT_FOUND);
 
         } catch (\Exception $e) {
-            Request::sendJsonResponse([
+            $this->responseHandler->json([
                 'status' => 'error',
                 'message' => $e->getMessage()
             ], HttpStatusCode::HTTP_INTERNAL_SERVER_ERROR);
             
         } catch (\Throwable $e) {
-            Request::sendJsonResponse([
+            $this->responseHandler->json([
                 'status' => 'error',
                 'message' => $e->getMessage()
             ], HttpStatusCode::HTTP_INTERNAL_SERVER_ERROR);

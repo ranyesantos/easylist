@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Db\Connection;
 use App\Exceptions\NotFoundException;
 use \App\Repositories\Product\ProductRepositoryInterface;
 use App\Utils\ServiceUtils;
@@ -16,7 +15,7 @@ class ProductService
         private ProductColorService $productColorService,
         private ProductSizeService $productSizeService,    
         private ServiceUtils $serviceUtils,
-        private PDO $pdo 
+        private PDO $pdo
     )
     {}
 

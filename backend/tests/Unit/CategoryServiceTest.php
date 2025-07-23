@@ -1,6 +1,5 @@
 <?php 
-
-namespace App\Tests;
+namespace Tests\Unit;
 
 use App\Exceptions\NotFoundException;
 use App\Repositories\Category\CategoryRepositoryInterface;
@@ -105,10 +104,10 @@ class CategoryServiceTest extends TestCase
         $categoryRepositoryMock->method('update')->willReturn($expectedOutput);
 
         $categoryService = new CategoryService($categoryRepositoryMock);
-        $categoryService->update($id,$category);
+        $result = $categoryService->update($id,$category);
 
-        $this->assertEquals($category['name'], $expectedOutput['name']);
-        $this->assertEquals($id, $expectedOutput['id']);
+        $this->assertEquals($expectedOutput['name'], $result['name']);
+        $this->assertEquals($expectedOutput['id'], $result['id']);
 
     }
 
