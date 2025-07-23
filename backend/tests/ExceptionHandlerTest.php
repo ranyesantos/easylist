@@ -21,7 +21,7 @@ class ExceptionHandlerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->controllerDummy = new DummyController;
+        $this->controllerDummy = new DummyController();
         $this->responseMock = $this->createMock(ResponseHandler::class);
         $this->exceptionHandler = new ExceptionHandler($this->responseMock);
     }
