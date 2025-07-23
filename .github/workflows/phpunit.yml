@@ -19,9 +19,12 @@ jobs:
           php-version: '8.2'
           extensions: mbstring, pdo, pdo_mysql
           coverage: none
-
       - name: Install Composer dependencies
         run: composer install --no-scripts --no-plugins --prefer-dist
+        working-directory: ./backend
+        
+      - name: Run Dump Autoload
+        run: composer dump-autoload
         working-directory: ./backend
 
       - name: Run PHPUnit tests
