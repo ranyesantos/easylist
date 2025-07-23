@@ -2,12 +2,8 @@
     "autoload": {
         "psr-4": {
             "App\\": "src/",
-            "Routes\\": "routes/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-        "App\\Tests\\": "tests/"
+            "Routes\\": "routes/",
+            "App\\Tests\\": "tests/"
         }
     },
     "require": {
