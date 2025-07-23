@@ -3,7 +3,7 @@
 use App\Exceptions\NotFoundException;
 use App\Http\Helpers\Request;
 use App\Http\Helpers\ResponseHandler;
-use App\Tests\Dummies\DummyController;
+use Tests\Dummies\DummyController;
 use App\Utils\HttpStatusCode;
 use App\Validators\ExceptionHandler;
 use PHPUnit\Framework\TestCase;

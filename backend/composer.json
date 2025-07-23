@@ -3,7 +3,7 @@
         "psr-4": {
             "App\\": "src/",
             "Routes\\": "routes/",
-            "App\\Tests\\": "tests/"
+            "Tests\\": "tests/"
         }
     },
     "require": {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Dummies;
+namespace Tests\Dummies;
 
 use App\Exceptions\NotFoundException;
 use App\Http\Helpers\Request;
