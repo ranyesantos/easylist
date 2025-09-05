@@ -2,8 +2,10 @@
 
 namespace App\Core;
 
+use App\Http\Helpers\ResponseHandler;
 use App\Utils\ContainerSetters;
 use App\Utils\ValidationHandler;
+use App\Validators\ExceptionHandler;
 use ReflectionMethod;
 
 class Router 
@@ -17,6 +19,8 @@ class Router
 
         $controllerPath = 'App\\Http\\Controllers\\API\\V1\\';
         $matched = false;
+        $exceptionHandler = new ExceptionHandler( new ResponseHandler());
+
         foreach ($routes[$method] as $route => $controllerAction) {
             if ($uri === $route) {
 
@@ -32,21 +36,17 @@ class Router
 
                 $controllerInstance = $container->get($controller);
                 
-                if (isset($controllerAction['validation'])) {
-                    $validatorClass = $controllerAction['validation'];
-                    ValidationHandler::handler($validatorClass, $container->get('Request'));
-                }
-
                 if (method_exists($controllerInstance, $action)) {
                     
                     $reflection = new ReflectionMethod($controllerInstance, $action);
                     
                     if ($reflection->getNumberOfParameters() > 0) {
-                        // o método espera parâmetros = passa Request
-                        $controllerInstance->$action($container->get('Request'));
+                        $exceptionHandler->handle( $controllerInstance, $action, $container->get('Request'));
+
                     } else {
-                        // o método NÃO espera parâmetros = chama sem argumentos
+                        $exceptionHandler->handle($controllerInstance, $action);
                         $controllerInstance->$action();
+
                     }
                 
                     $matched = true;
@@ -60,9 +60,8 @@ class Router
                 if (preg_match("~^$route$~", $uri, $matches)) {
 
                     if (isset($matches[1])) {
-                        $id = $matches[1];
+                        $id = (int) $matches[1];
                     }
-                    // var_dump($controllerAction['controller']);
 
                     if (is_array($controllerAction)){
                         list($controller, $action) = explode('@', $controllerAction['controller']);
@@ -73,7 +72,9 @@ class Router
                     if (!class_exists($controllerPath . $controller)){
                         return;
                     }
+
                     $controllerInstance = $container->get($controller);
+
                     if (method_exists($controllerInstance, $action)) {
                         $reflectionMethod = new ReflectionMethod($controllerInstance, $action);
                         //$params recebe os parametros esperados pelo método do controller
@@ -90,7 +91,8 @@ class Router
                                 $args[] = $id;
                             }
                         }
-                        $controllerInstance->$action(...$args);
+                        
+                        $exceptionHandler->handle($controllerInstance, $action, $args);
 
                         $matched = true;
                     }

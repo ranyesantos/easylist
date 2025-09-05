@@ -2,6 +2,8 @@
 
 namespace App\Utils;
 use App\Config\Container;
+use App\Db\Connection;
+use PDO;
 
 class ContainerSetters 
 {
@@ -11,32 +13,32 @@ class ContainerSetters
         $container = new Container();
         
         //<-----interfaces/repositories----->
-        $container->set('ProductRepositoryInterface', function () {
-            return new \App\Repositories\Product\ProductRepository;
+        $container->set('ProductRepositoryInterface', function ()use ($container) {
+            return new \App\Repositories\Product\ProductRepository($container->get(PDO::class));
         });
 
-        $container->set('CategoryRepositoryInterface', function () {
-            return new \App\Repositories\Category\CategoryRepository();
+        $container->set('CategoryRepositoryInterface', function () use ($container) {
+            return new \App\Repositories\Category\CategoryRepository($container->get(PDO::class));
         });
 
-        $container->set('CustomerRepositoryInterface', function () {
-            return new \App\Repositories\Customer\CustomerRepository();
+        $container->set('CustomerRepositoryInterface', function () use ($container) {
+            return new \App\Repositories\Customer\CustomerRepository($container->get(PDO::class));
         });
 
-        $container->set('ColorRepositoryInterface', function () {
-            return new \App\Repositories\Color\ColorRepository();
+        $container->set('ColorRepositoryInterface', function () use ($container) {
+            return new \App\Repositories\Color\ColorRepository($container->get(PDO::class));
         });
 
-        $container->set('SizeRepositoryInterface', function () {
-            return new \App\Repositories\Size\SizeRepository();
+        $container->set('SizeRepositoryInterface', function () use ($container) {
+            return new \App\Repositories\Size\SizeRepository($container->get(PDO::class));
         });
 
-        $container->set('ProductColorRepositoryInterface', function() {
-            return new \App\Repositories\ProductColor\ProductColorRepository();
+        $container->set('ProductColorRepositoryInterface', function()use ($container) {
+            return new \App\Repositories\ProductColor\ProductColorRepository($container->get(PDO::class));
         });
 
-        $container->set('ProductSizeRepositoryInterface', function() {
-            return new \App\Repositories\ProductSize\ProductSizeRepository();;
+        $container->set('ProductSizeRepositoryInterface', function() use ($container) {
+            return new \App\Repositories\ProductSize\ProductSizeRepository($container->get(PDO::class));
         });
 
         //<-----services----->
@@ -57,7 +59,8 @@ class ContainerSetters
                 $container->get('ProductRepositoryInterface'),
                 $container->get('ProductColorService'),
                 $container->get('ProductSizeService'),
-                $container->get('ServiceUtils')
+                $container->get('ServiceUtils'),
+                $container->get(PDO::class)
             );
         });
 
@@ -115,6 +118,9 @@ class ContainerSetters
             return new \App\Utils\ServiceUtils;
         });
 
+        $container->set(PDO::class, function () {
+            return Connection::getPDO();
+        });
 
         return $container;
     }

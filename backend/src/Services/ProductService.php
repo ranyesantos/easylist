@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Exceptions\NotFoundException;
 use \App\Repositories\Product\ProductRepositoryInterface;
 use App\Utils\ServiceUtils;
+use PDO;
 
 class ProductService 
 {
@@ -13,8 +14,9 @@ class ProductService
         private ProductRepositoryInterface $productRepository,
         private ProductColorService $productColorService,
         private ProductSizeService $productSizeService,    
-        private ServiceUtils $serviceUtils
-    ) 
+        private ServiceUtils $serviceUtils,
+        private PDO $pdo
+    )
     {}
 
     public function getAll(): array 
@@ -37,29 +39,34 @@ class ProductService
 
     public function create(array $data)
     {
-        $product = $this->productRepository->create($data);
         
-        if (isset($data['product_colors'])){
-            $productColorData = $data['product_colors'];
+        $this->pdo->beginTransaction();
 
-            foreach ($productColorData as &$data) {
-                $sizeData[] = $data['size_data'];
-                unset($data['size_data']);
-                
-                $productColor[] = $this->productColorService->create($product['id'], $data);
-            }
-            for($i = 0; $i < count($productColor); $i++){
-                $productId = $productColor[$i]['id'];
+        try {
+            $product = $this->productRepository->create($data);
 
-                for($p = 0; $p < count($sizeData[$i]); $p++){
-                    $this->productSizeService->create($productId, $sizeData[$i][$p]);
+            if (isset($data['product_colors']) && is_array($data['product_colors'])) {
+                foreach ($data['product_colors'] as $colorData) {
+                    $sizes = $colorData['size_data'] ?? [];
+                    unset($colorData['size_data']);
+
+                    $productColor = $this->productColorService->create($product['id'], $colorData);
+                    
+                    foreach ($sizes as $size) {
+                        $this->productSizeService->create($productColor['id'], $size);
+                    }
                 }
-
             }
-        }
 
-        return $this->getById($product['id']);
+            $this->pdo->commit();
+
+            return $this->getById($product['id']);
+        } catch (\Exception $e) {
+            $this->pdo->rollBack();
+            throw $e;
+        }
     }
+
     
     public function update(int $id, array $data)
     {

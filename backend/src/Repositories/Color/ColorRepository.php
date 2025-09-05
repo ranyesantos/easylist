@@ -4,15 +4,12 @@ namespace App\Repositories\Color;
 
 use App\Db\Connection;
 use App\Repositories\Color\ColorRepositoryInterface;
+use PDO;
 
 class ColorRepository implements ColorRepositoryInterface
 {
-    private $pdo;
-
-    public function __construct() 
-    {
-        $this->pdo = Connection::getPDO();
-    }
+    public function __construct(private PDO $pdo)
+    {}
 
     public function getAll(): array
     {

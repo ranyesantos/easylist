@@ -3,17 +3,13 @@
 namespace App\Repositories\Product;
 use App\Db\Connection;
 use App\Repositories\Product\ProductRepositoryInterface;
-use Exception;
+use PDO;
 
 class ProductRepository implements ProductRepositoryInterface 
 {
     
-    private $pdo;
-
-    public function __construct() 
-    {
-        $this->pdo = Connection::getPDO();
-    }
+    public function __construct(private PDO $pdo)
+    {}
 
     public function getAll(): array
     {

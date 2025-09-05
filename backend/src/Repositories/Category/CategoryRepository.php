@@ -4,16 +4,12 @@ namespace App\Repositories\Category;
 
 use App\Db\Connection;
 use App\Repositories\Category\CategoryRepositoryInterface;
+use PDO;
 
 class CategoryRepository implements CategoryRepositoryInterface
 {
-    private $pdo;
-    
-    public function __construct()
-    {
-        $this->pdo = Connection::getPDO();
-    }
-
+    public function __construct(private PDO $pdo)
+    {}
     public function getAll(): array
     {
         $stmt = $this->pdo->prepare("SELECT * FROM category");
